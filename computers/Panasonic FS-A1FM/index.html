@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>松下電器 FS-A1FM — レジスタ仕様と機体諸元 | msx.btron.pro</title>
-    <meta name="description" content="松下電器 FS-A1FM (Panasonic FS-A1FM) のハードウェア諸元、スロット配分、I/O ポート、シリコンレジスタ仕様。T9769 ASIC、MSX-MUSIC (YM2413)、内蔵モデム (0x80-0x87)、内蔵ワープロ。">
+    <meta name="description" content="松下電器 FS-A1FM (Panasonic FS-A1FM) のハードウェア諸元、スロット配分、I/O ポート、シリコンレジスタ仕様。MSX2 規格機、Yamaha V9938 VDP、T9769 ASIC（初採用）、MSX-MUSIC (YM2413)、内蔵モデム (0x80-0x87)、内蔵ワープロ。">
     <link rel="stylesheet" href="../../index.css?v=3">
 </head>
 <body>
@@ -32,12 +32,12 @@
     </nav>
 
     <div class="setting-hero">
-        <div class="setting-hero-badge">MSX2+ · Panasonic (松下電器産業) · 1988 · openMSX Specification</div>
+        <div class="setting-hero-badge">MSX2 · Panasonic (松下電器産業) · 1988 · openMSX Specification</div>
         <h1>松下電器 FS-A1FM</h1>
         <div class="subtitle">
-            松下電器が送り出した通信・ワープロ統合型 MSX2+。MSX-Engine T9769 ASIC と V9958 を搭載し自然画 19,268 色表示に対応。内蔵 FM 音源 MSX-MUSIC（YM2413）、1200 bps 電話回線モデム、および漢字変換辞書 SRAM を集積した高集積機。
+            松下電器が送り出した通信・ワープロ統合型 MSX2。MSX-Engine T9769 ASIC（初採用）と Yamaha V9938 を搭載。内蔵 FM 音源 MSX-MUSIC（YM2413）、1200 bps 電話回線モデム、および漢字変換辞書 SRAM を集積した高集積機。
             <span class="subtitle-en">
-                "The Panasonic FS-A1FM is an integrated telecommunication MSX2+ personal computer. Featuring the T9769 MSX-Engine ASIC and Yamaha V9958 VDP with 19,268-color YJK display modes, it houses internal MSX-MUSIC (YM2413), a 1200 bps telephone modem (I/O 0x80–0x87), and Japanese word-processing firmware in battery-backed SRAM."
+                "The Panasonic FS-A1FM is an integrated telecommunication MSX2 personal computer. Featuring the T9769 MSX-Engine ASIC (its first appearance) and Yamaha V9938 VDP, it houses internal MSX-MUSIC (YM2413), a 1200 bps telephone modem (I/O 0x80–0x87), and Japanese word-processing firmware in battery-backed SRAM."
             </span>
         </div>
     </div>
@@ -46,9 +46,9 @@
         <a href="../../computers/index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 計算機一覧へ戻る (Computers Index)</a>
 
         <div class="tagline-card">
-            <strong>松下電器 FS-A1FM (Panasonic FS-A1FM) 機体工学要約</strong> — 本機は 1988 年に Panasonic (松下電器産業) より投入された MSX2+ 規格機です。RAM 容量は 64 KiB、VRAM は 128 KiB を搭載し、VDP には Yamaha V9958 を採用。FDC には TC8566AF 2DD 720 KiB FDD を内蔵します。特筆すべき回路として T9769 ASIC、MSX-MUSIC (YM2413)、内蔵モデム (0x80-0x87)、内蔵ワープロ を集積しています。
+            <strong>松下電器 FS-A1FM (Panasonic FS-A1FM) 機体工学要約</strong> — 本機は 1988 年に Panasonic (松下電器産業) より投入された MSX2 規格機です。RAM 容量は 64 KiB、VRAM は 128 KiB を搭載し、VDP には Yamaha V9938 を採用。FDC には TC8566AF 2DD 720 KiB FDD を内蔵します。特筆すべき回路として T9769 ASIC（初採用）、MSX-MUSIC (YM2413)、内蔵モデム (0x80-0x87)、内蔵ワープロ を集積しています。
             <span class="tagline-en">
-                "Technical profile for the Panasonic FS-A1FM. Engineered with 64 KiB main RAM, 128 KiB VRAM, Yamaha V9958 display processor, and integrated TC8566AF 2DD 720 KiB FDD. Silicon highlights include T9769 ASIC、MSX-MUSIC (YM2413)、内蔵モデム (0x80-0x87)、内蔵ワープロ."
+                "Technical profile for the Panasonic FS-A1FM. Engineered with 64 KiB main RAM, 128 KiB VRAM, Yamaha V9938 display processor, and integrated TC8566AF 2DD 720 KiB FDD. Silicon highlights include T9769 ASIC (first appearance), MSX-MUSIC (YM2413)、内蔵モデム (0x80-0x87)、内蔵ワープロ."
             </span>
         </div>
 
@@ -81,8 +81,8 @@
                         </tr>
                         <tr>
                             <td><b>VDP (映像)</b></td>
-                            <td>Yamaha V9958</td>
-                            <td>VRAM 128 KiB、ハードウェアグラフィックコマンド (HMMV, LDIRVM)</td>
+                            <td>Yamaha V9938</td>
+                            <td>VRAM 128 KiB、ハードウェアグラフィックコマンド (HMMV, LDIRVM)、512色パレット、Screen 0–8</td>
                         </tr>
                         <tr>
                             <td><b>主記憶 (RAM)</b></td>
@@ -217,8 +217,8 @@
         
         <tr>
             <td><code>0x98–0x9B</code></td>
-            <td><b>V9958 VDP Ports</b></td>
-            <td>0x98: VRAM データ, 0x99: コマンド/ステータス, 0x9A: パレット, 0x9B: 間接レジスタ (自然画 YJK/YAE 制御)</td>
+            <td><b>V9938 VDP Ports</b></td>
+            <td>0x98: VRAM データ読出/書込, 0x99: コマンドレジスタ書込 / ステータスレジスタ読出, 0x9A: カラーパレット (R/G/B 順次書込), 0x9B: 間接レジスタアクセス</td>
         </tr>
         
         <tr>
