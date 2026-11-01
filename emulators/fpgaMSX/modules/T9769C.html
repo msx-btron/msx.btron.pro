@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第10章 速い方へ切り替える — T9769C | fpgaMSX | msx.btron.pro</title>
+    <meta name="description" content="fpgaMSX の第10章。S1990。ポート $E4 と $E5 で、Z80 のままか R800 になるかを胸の札に書く。">
+    <link rel="stylesheet" href="../../../index.css?v=3">
+</head>
+<body>
+    <nav class="sticky" aria-label="Site navigation">
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">MSX <span class="logo-tag">btron.pro</span></a>
+            <ul class="nav-links">
+                <li><a href="../../../computers/index.html">Computers</a></li>
+                <li><a href="../../../development/index.html">Development</a></li>
+                <li><a href="../../../emulators/index.html" class="active">Emulators</a></li>
+                <li><a href="../../../games/index.html">Games</a></li>
+                <li><a href="../../../systems/index.html">Systems</a></li>
+                <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-MSX</a></li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="setting-nav">
+        <a href="../../../index.html">MSX</a>
+        <span class="sep">/</span>
+        <a href="../../../emulators/index.html">Emulators</a>
+        <span class="sep">/</span>
+        <a href="../index.html">BX-8</a>
+        <span class="sep">/</span>
+        <span class="current">速い方へ切り替える</span>
+    </nav>
+    <div class="setting-hero">
+        <div class="setting-hero-badge">第十章 · cpu/T9769C.bsv</div>
+        <h1>速い方へ切り替える</h1>
+        <div class="subtitle">
+            速さは命令ではない。胸の札の、一本のビットである。
+            <span class="subtitle-en">"Speed is not an instruction. It is one bit on the card in the pocket."</span>
+        </div>
+    </div>
+    <main class="wrap">
+        <a href="../index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 表紙の二枚へ戻る</a>
+        
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">01 / Card</span>
+                <h2 class="jp-title">1. 朝の札は 0x60</h2>
+                <p class="band-eyebrow">ビット 5 が Z80 · ビット 6 が ROM</p>
+            </div>
+            <div class="doc-summary">演算手はこの札を一つ、内側に持って生まれる。朝の値は 0x60。ビット 5 が立っていれば Z80、下りていれば R800。ビット 6 が立っていればスロット 0 は ROM、下りていれば影の DRAM を開く。ポート $E4 が何番の欄を見るかを選び、$E5 が中を読む。書ける欄は 6 番だけで、残るビットは 5 と 6 だけである。ほかの欄へ書いても、札は動かない。
+            <span class="summary-en">"The processor is born with one card inside. The morning value is 0x60. Bit 5 up is Z80, bit 5 down is R800. Bit 6 up keeps slot 0 on ROM, bit 6 down opens the shadow DRAM. Port $E4 chooses which field to see, and $E5 reads it. Only field 6 can be written, and only bits 5 and 6 remain. Writes to the other fields leave the card still."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">02 / Voices</span>
+                <h2 class="jp-title">2. 決まった声と、E6 の時計</h2>
+                <p class="band-eyebrow">$E6 · $E7 · $F4</p>
+            </div>
+            <div class="doc-summary">いくつかの欄は、読むたびに決まった声を返す。5 番は 0x40、6 番は朝の札そのもの、13 番は 0x03、14 番は 0x2F、15 番は 0x8B。それ以外の欄は 0xFF を返す。$E4 の読出は、いま指している欄の番号である。E6 の時計は $E6 と $E7 に下位と上位で顔を出し、どちらへ書いても零に戻る。戻すことと進めることが同じ拍で喧嘩しないよう、更新は一つの規則にまとめてある。$F4 のシステム旗は朝 0xA0 で始まり、コールドリセットとブートの印を、コメントがそこに読んでいる。
+            <span class="summary-en">"Some fields answer with a fixed voice: field 5 is 0x40, field 6 is the morning card itself, 13 is 0x03, 14 is 0x2F, 15 is 0x8B. Every other field returns 0xFF. A read of $E4 returns the number of the field now selected. The E6 clock shows its low half at $E6 and its high half at $E7, and a write to either returns it to zero. Reset and increment share one rule, so they cannot argue in the same beat. The system flags at $F4 begin at 0xA0, where the comment reads cold reset and boot."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">※</span>
+                <h2 class="jp-title">章のあいだ</h2>
+                <p class="band-eyebrow">fpgaMSX · bx8</p>
+            </div>
+            <div class="related-grid"><a href="ALU.html" class="related-card"><h4>旗と、積 <span>←</span></h4><p>前の章。</p></a><a href="../index.html" class="related-card"><h4>表紙 <span>↑</span></h4><p>二枚の絵と、この本の目次。</p></a><a href="V9958.html" class="related-card"><h4>絵が現れるところ <span>→</span></h4><p>次の章。</p></a></div>
+        </section>
+    </main>
+    <footer class="app-footer">
+        <div class="wrap">
+            <div class="footer-columns">
+                <div>
+                    <h4>Computers</h4>
+                    <ul>
+                        <li><a href="../../../computers/Sony HB-F900/index.html">Sony HB-F900</a></li>
+                        <li><a href="../../../computers/Sony HB-G900AP/index.html">Sony HB-G900AP</a></li>
+                        <li><a href="../../../computers/Victor HC-95 AB/index.html">Victor HC-95 AB</a></li>
+                        <li><a href="../../../computers/Yamaha YIS-805 256/index.html">Yamaha YIS-805 256</a></li>
+                        <li><a href="../../../computers/Panasonic FS-A1FM/index.html">Panasonic FS-A1FM</a></li>
+                        <li><a href="../../../computers/Hitachi MB-H70/index.html">Hitachi MB-H70</a></li>
+                        <li><a href="../../../computers/index.html">全13機種一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Systems</h4>
+                    <ul>
+                        <li><a href="../../../systems/btron/index.html">8-bit BTRON</a></li>
+                        <li><a href="../../../systems/msx-bios/index.html">MSX-BIOS</a></li>
+                        <li><a href="../../../systems/msx-dos/index.html">MSX-DOS 2</a></li>
+                        <li><a href="../../../systems/c-bios/index.html">C-BIOS</a></li>
+                        <li><a href="../../../systems/uzix/index.html">UZIX (Unix V7)</a></li>
+                        <li><a href="../../../systems/index.html">基本ソフト一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Development</h4>
+                    <ul>
+                        <li><a href="../../../development/sdcc/index.html">SDCC Compiler</a></li>
+                        <li><a href="../../../development/pasmo/index.html">Pasmo Assembler</a></li>
+                        <li><a href="../../../development/index.html">Toolchain Overview</a></li>
+                        <li><a href="https://btron.pro/btron/doc/txt/MSX-SOUND.txt" target="_blank">MSX Sound Spec</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Emulators</h4>
+                    <ul>
+                        <li><a href="../../../emulators/openMSX/index.html">openMSX</a></li>
+                        <li><a href="../../../emulators/blueMSX/index.html">blueMSX</a></li>
+                        <li><a href="../../../emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="../index.html" class="active">fpgaMSX (bx8)</a></li>
+                        <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 4.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.84rem; color: var(--ink-3); display: flex; flex-direction: column; align-items: center; gap: 1.6rem;">
+                <a href="../../../sakazaki.svg" title="Sakazaki Clan Kamon — 二蓋笠 (Nigai-gasa)" style="display: inline-block; text-decoration: none; margin-bottom: 0.2rem;">
+                    <img src="../../../sakazaki.svg" alt="Sakazaki Order Logo" style="width: 108px; height: auto; display: block; opacity: 0.88; transition: opacity 0.25s ease, transform 0.25s ease;">
+                </a>
+                <div class="footer-legal">
+                    <p style="margin: 0 0 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #b8c0c8; font-size: 0.81rem;">
+                        &copy; 2026 Cryptographics Telesystems, LLC. Ukraine. All rights reserved.
+                    </p>
+                    <p style="margin: 0 0 0.9rem; line-height: 1.75;">
+                        <b>TRADEMARK &amp; COMPLIANCE DISCLOSURE:</b> MSX&trade; is a registered trademark of MSX Licensing Corporation and ASCII Corporation. TRON, BTRON, and μITRON are trademarks of TRON Forum and Professor Ken Sakamura. SONY&reg;, HitBit&trade;, and G-ZERO&trade; are trademarks or registered trademarks of Sony Group Corporation / Sony Corporation. Hitachi&reg; is a registered trademark of Hitachi, Ltd. Panasonic&reg; (Panasonic Holdings Corporation), Victor / JVC&reg; (JVCKENWOOD Corporation), and Yamaha&reg; (Yamaha Corporation) are trademarks of their respective proprietors. All manufacturer designations, hardware component identifiers, and registered software titles cited within this repository are the property of their respective trademark holders and are reproduced strictly under statutory fair use doctrine for non-commercial historical preservation, register-level hardware documentation, and cleanroom interoperability engineering.
+                    </p>
+                    <p style="margin: 0; line-height: 1.75; color: #69747e; font-size: 0.74rem;">
+                        msx.btron.pro &nbsp;·&nbsp; MSX Archival &amp; Technical Portal &nbsp;·&nbsp; Under ISC / MIT Licence &nbsp;·&nbsp; Conforming to DOCOPS &amp; PUBLISH Standards
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

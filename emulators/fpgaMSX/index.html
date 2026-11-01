@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fpgaMSX — Bluespec MSX turbo R (bx8) | msx.btron.pro</title>
-    <meta name="description" content="fpgaMSX（bx8）は B-System の Bluespec SystemVerilog による MSX turbo R である。単一 57.2727 MHz クロック、Verilator 上の C99 ハーネス、スロット 1 からのカートリッジ起動、SCREEN 1/2/5 のスキャンアウト、および assets/msx 全 14 本の起動記録。">
+    <meta name="description" content="fpgaMSX（bx8）の本。口絵は五色の MSX ロゴと AUREL VAULT の題字。Solo Game Author は @kanon-ai。二十一章が、一つの時計から絵と音と鍵までを歩く。ビットストリームは焼いていない。">
     <link rel="stylesheet" href="../../index.css?v=3">
 </head>
 <body>
@@ -28,16 +28,16 @@
         <span class="sep">/</span>
         <a href="../../emulators/index.html">Emulators</a>
         <span class="sep">/</span>
-        <span class="current">fpgaMSX</span>
+        <span class="current">BX-8</span>
     </nav>
 
     <div class="setting-hero">
         <div class="setting-hero-badge">bx8 · Bluespec SystemVerilog · Verilator C99 Harness · 57.2727 MHz · Headless Frame Record</div>
         <h1>fpgaMSX (Emulators)</h1>
         <div class="subtitle">
-            C99 コア tronMSX と同じ機械を、Bluespec のレジスタ転送で書き直した MSX turbo R。検証は Verilator 上のヘッドレス実行であり、ビットストリームは焼いていない。
+            C99 の tronMSX と同じ機械を、Bluespec で書き直した MSX turbo R の本。口絵の二枚から入り、時計、番地、一人の演算手、絵の出る場所、音、鍵と歩いて、末尾の台帳で閉じる。基板には焼いていない。
             <span class="subtitle-en">
-                "fpgaMSX, codename bx8, is the Bluespec MSX turbo R beside tronMSX. One master clock, a C99 Verilator harness, and a frame record for every cartridge in the depot. No bitstream has been loaded onto a board."
+                "A book of the Bluespec MSX turbo R beside tronMSX. It opens on two plates, walks from the clock through the one processor to the picture, the voices, and the keys, and closes on the ledger. No bitstream has been fired."
             </span>
         </div>
     </div>
@@ -46,21 +46,61 @@
         <a href="../../emulators/index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 摸擬目録へ戻る (Emulators Index)</a>
 
         <div class="tagline-card">
-            <strong>シリコンの前に、絵で止める。</strong> — ソースは <code>btron/src/emulators/bx8/</code> にある。マスタクロックは 57.2727 MHz の一つで、<code>tick_28m</code>、<code>tick_7m</code>、<code>tick_3m58</code>、<code>tick_e6</code> は同じクロック上のイネーブルである。Z80A と R800 は一つの <code>CPUCore</code> を分け合い、T9769C のポート <code>$E4</code> / <code>$E5</code> が切り替える。<code>assets/msx/</code> の ROM 14 本はすべてカートリッジの初期化番地に到達した。絵になるのはその一部である。
+            <strong>シリコンの前に、絵で止める。</strong> — この本はファイルの注釈を並べた目録ではない。表紙の左は C-BIOS が描いた五色のロゴ、右は <a href="https://github.com/kanon-ai">@kanon-ai</a> が一人で書いた AUREL VAULT の題字である。原稿は <code>btron/src/emulators/bx8/</code> にあり、時計は 57.2727 MHz の一つ、Z80 と R800 は同じ演算手が胸の札で切り替える。十四本のカートリッジは初期化番地まで届いた。絵になって頁に残ったのは、そのうちの一部である。
             <span class="tagline-en">
-                "The machine lives at btron/src/emulators/bx8/. Z80A and R800 share one CPUCore, switched by the T9769C. All fourteen cartridges reach their init vector. The plates below are the frames that actually drew."
+                "This book is not a stack of file comments. The left plate is the five-color logo C-BIOS drew. The right plate is the AUREL VAULT title written by @kanon-ai, Solo Game Author. The manuscript is at btron/src/emulators/bx8/. One clock, one processor, fourteen cartridges at their init vectors, and only some of them became a picture."
             </span>
         </div>
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">01 / Placement</span>
-                <h2 class="jp-title">1. 配置 (Where bx8 Sits)</h2>
+                <span class="band-index">口絵</span>
+                <h2 class="jp-title">口絵 (Frontispiece)</h2>
+                <p class="band-eyebrow">MSX_LOGO-clean-final · AUREL VAULT · 256×212</p>
+            </div>
+            <div class="doc-summary">
+                本を開いた最初に置く二枚。左は画面 5、モード <code>0x0C</code>、五色のスプラッシュ。右は画面 8、モード <code>0x1C</code>、V9968 の 256 色を通った題字。番号を色そのものとして塗っていた頃、右の絵は雑音に見えていた。
+                <span class="summary-en">"The two plates a book opens on. Left, screen 5, the five-color splash. Right, screen 8, the title seen through the V9968 table of 256 colors. When those numbers were painted as if they were already color, the right-hand picture looked like noise."</span>
+            </div>
+            <div class="plate-row">
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/logo-clean.png" alt="Five-color MSX logo: navy and yellow cubes inside a ring, on a pale field, with a black band along the bottom">
+                        </div>
+                        <figcaption>
+                            <span><b>MSX_LOGO-clean-final</b> — Screen 5</span>
+                            <span>mode 0x0C · C-BIOS splash</span>
+                        </figcaption>
+                    </figure>
+                    <p>リングの中の立方体。淡い地に黄と紺、下端は黒帯。ROM は <code>MSX_LOGO-clean-final.rom</code>。このスプラッシュは C-BIOS のロゴカートリッジの絵である。</p>
+                </div>
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/aurel.png" alt="AUREL VAULT title on MSX screen 8: a cloaked figure on stone stairs, gold lettering, ruins opening onto a floating city">
+                        </div>
+                        <figcaption>
+                            <span><b>AUREL VAULT</b> — Screen 8 · EPAL</span>
+                            <span>Solo Game Author · <a href="https://github.com/kanon-ai">@kanon-ai</a></span>
+                        </figcaption>
+                    </figure>
+                    <p>金の題字、マントの人物、石段、奥の空中都市。Solo Game Author は <a href="https://github.com/kanon-ai">@kanon-ai</a>。画面 8、モード <code>0x1C</code>、R#20 は <code>0x11</code>。この枚は VRAM を 256 色で描き直した題字である。</p>
+                    <p><strong>NOTE:</strong> キャプション帯は、この枚に無い。理由は、y が 175 以降がまだ絵の続きで、帯の HMMV と字形の LMMM が発行される前に走行が止まっていること。</p>
+                    <p class="en">AUREL VAULT. Solo Game Author: <a href="https://github.com/kanon-ai">@kanon-ai</a>. Screen 8, mode 0x1C, R#20 0x11. This plate is the title redrawn from VRAM through the 256-color table. NOTE: the caption bar is not in the frame. From y 175 on the bytes are still the picture, and the run stopped before the HMMV and the glyph LMMM.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">序</span>
+                <h2 class="jp-title">序。原稿はどこにあるか (Where the Manuscript Lives)</h2>
                 <p class="band-eyebrow">src/emulators/bx8 · Sibling of tronMSX · Proofs in build/bx8</p>
             </div>
             <div class="doc-summary">
-                ソフトウェアの MSX と、同じ倉庫の FPGA 機械。<br>
-                <span class="summary-en">"The C99 reference and the Bluespec machine are siblings. Boot frames stay in the depot build tree; this page keeps display copies."</span>
+                tronMSX が C99 で先に書いた機械を、同じ倉庫の Bluespec がレジスタの転送として書き直した。起動の原板はデポの <code>build/bx8/</code> に残り、この本が載せるのはその表示用の写しである。
+                <span class="summary-en">"tronMSX wrote the machine first, in C99. Bluespec, in the same depot, rewrote it as a transfer of registers. The original boot plates stay in build/bx8/. This book keeps display copies."</span>
             </div>
             <div class="market-table-wrap">
                 <table class="market-table">
@@ -102,58 +142,128 @@
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">02 / Silicon</span>
-                <h2 class="jp-title">2. 実装されている単位 (Silicon That Is In The Tree)</h2>
-                <p class="band-eyebrow">CPUCore · T9769C · SlotManager · V9958 · PSG · SCC · PCM</p>
+                <span class="band-index">目次</span>
+                <h2 class="jp-title">目次 (Contents)</h2>
+                <p class="band-eyebrow">二十一章 · 時計から鍵まで · OPLL と Geo3D の章は無い</p>
             </div>
             <div class="doc-summary">
-                ツリーにファイルがあるものだけを載せる。OPLL と Geo3D の BSV は無い。<br>
-                <span class="summary-en">"Modules listed here have sources. OPLL.bsv and Geo3D.bsv do not exist. ASCII16 bank switching is still a host intercept in the harness."</span>
+                章は、機械の中を歩く順に並んでいる。カートリッジの絵を出した部屋は第1章である。第21章の五つの足場は、家を建てるあいだ外に組んだ検証であり、口絵はそこから出ていない。NOTE: OPLL と Geo3D の章は無い。理由は、その原稿がツリーに無いこと。
+                <span class="summary-en">"The chapters follow a walk through the machine. The room that produced the plates is chapter 1. Chapter 21 is the scaffold used while the house was rising, and the frontispiece did not come from it. NOTE: there is no chapter for OPLL or Geo3D, because those manuscripts are not in the tree."</span>
             </div>
             <div class="market-table-wrap">
                 <table class="market-table">
                     <thead>
                         <tr>
-                            <th style="width: 34%;">BSV</th>
-                            <th style="width: 28%;">対応する C99</th>
-                            <th>いま動いていること</th>
+                            <th>BSV</th>
+                            <th>頁</th>
+                            <th>章</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>cpu/CPUCore.bsv</code></td>
-                            <td><code>z80.c</code> / <code>r800.c</code></td>
-                            <td>一つのレジスタファイル。リセット後は Z80。ポート <code>$E4</code> のビット 5 が 0 で R800。C-BIOS の <code>wait_b</code> を抜けてカートリッジに入る。</td>
+                            <td><code>TopMSXTurboR.bsv</code></td>
+                            <td><a href="modules/TopMSXTurboR.html">第1章　機械そのもの</a></td>
+                            <td>カートリッジを迎える一つの部屋。</td>
                         </tr>
                         <tr>
-                            <td><code>cpu/T9769C.bsv</code></td>
-                            <td><code>t9769c.c</code></td>
-                            <td>S1990。レジスタ 6 のビット 6 が DRAM シャドウ。リセット値 <code>cpu_status = 0x60</code>。</td>
+                            <td><code>MSXClocks.bsv</code></td>
+                            <td><a href="modules/MSXClocks.html">第2章　一つの時計</a></td>
+                            <td>遅い歯も速い歯も、同じ針から出る。</td>
+                        </tr>
+                        <tr>
+                            <td><code>Bus.bsv</code></td>
+                            <td><a href="modules/Bus.html">第3章　番地の言葉</a></td>
+                            <td>記憶の無い、手紙の形だけの章。</td>
+                        </tr>
+                        <tr>
+                            <td><code>memory/MemoryArbiter.bsv</code></td>
+                            <td><a href="modules/MemoryArbiter.html">第4章　誰が話してよいか</a></td>
+                            <td>画面の走査が先に話し、残りは輪番。</td>
                         </tr>
                         <tr>
                             <td><code>memory/SlotManager.bsv</code></td>
-                            <td><code>slots.c</code></td>
-                            <td>スロット 1 は全ページがカートリッジ窓。空のページ 0 は <code>0xFF</code> のままで、CHKRAM は通る。<code>$FFFF</code> の読出は反転。</td>
+                            <td><a href="modules/SlotManager.html">第5章　四つの頁と六つの窓</a></td>
+                            <td>16 KB ごとに、どの棚を開くか。</td>
                         </tr>
                         <tr>
                             <td><code>memory/Mapper.bsv</code></td>
-                            <td><code>slots.c</code></td>
-                            <td>512 KB のマッパ RAM。物理 <code>0x010000</code>、マスク <code>0x1F</code>。</td>
+                            <td><a href="modules/Mapper.html">第6章　512 KB の引き出し</a></td>
+                            <td>スロット 3 の四頁が、別々の段を指名する。</td>
+                        </tr>
+                        <tr>
+                            <td><code>cpu/CPUCore.bsv</code></td>
+                            <td><a href="modules/CPUCore.html">第7章　一人の演算手</a></td>
+                            <td>Z80 と R800 は、札で足を速める同じ人。</td>
+                        </tr>
+                        <tr>
+                            <td><code>cpu/Decode.bsv</code></td>
+                            <td><a href="modules/Decode.html">第8章　命令に名前を付ける</a></td>
+                            <td>実行の前にある、八進の命名。</td>
+                        </tr>
+                        <tr>
+                            <td><code>cpu/ALU.bsv</code></td>
+                            <td><a href="modules/ALU.html">第9章　旗と、積</a></td>
+                            <td>結果より先に残る、八本の旗。</td>
+                        </tr>
+                        <tr>
+                            <td><code>cpu/T9769C.bsv</code></td>
+                            <td><a href="modules/T9769C.html">第10章　速い方へ切り替える</a></td>
+                            <td>速さは命令ではなく、胸の札の一本。</td>
                         </tr>
                         <tr>
                             <td><code>vdp/V9958.bsv</code></td>
-                            <td><code>v9938.c</code></td>
-                            <td>SCREEN 5、SCREEN 2（G2）、SCREEN 1（G1）を VRAM からスキャンする。スプライトと SCREEN 0 は未描画。</td>
+                            <td><a href="modules/V9958.html">第11章　絵が現れるところ</a></td>
+                            <td>口絵の右が、色を得た場所。</td>
                         </tr>
                         <tr>
-                            <td><code>audio/PSG.bsv</code> <code>SCC.bsv</code> <code>PCM.bsv</code></td>
-                            <td><code>psg.c</code> <code>scc.c</code> <code>pcm.c</code></td>
-                            <td>音源の器はある。この頁の記録は絵であり、音の照合はまだ無い。</td>
+                            <td><code>vdp/VDPRegs.bsv</code></td>
+                            <td><a href="modules/VDPRegs.html">第12章　画面の覚え書き</a></td>
+                            <td>歩く前に、画面が自分の形を書くノート。</td>
                         </tr>
                         <tr>
-                            <td><code>io/PPI.bsv</code> <code>Keyboard.bsv</code></td>
-                            <td><code>ppi.c</code> <code>kbd.c</code></td>
-                            <td>PPI <code>$A8</code> はリセットでスロット 0。キーボード行列はハーネスから押せる。</td>
+                            <td><code>vdp/Raster.bsv</code></td>
+                            <td><a href="modules/Raster.html">第13章　ビームの歩き</a></td>
+                            <td>228 歩の行のうち、絵になるのは 168。</td>
+                        </tr>
+                        <tr>
+                            <td><code>vdp/Blitter.bsv</code></td>
+                            <td><a href="modules/Blitter.html">第14章　矩形を塗る手</a></td>
+                            <td>題字の本体は、この手を待たずに書かれた。</td>
+                        </tr>
+                        <tr>
+                            <td><code>vdp/YJK.bsv</code></td>
+                            <td><a href="modules/YJK.html">第15章　まだ呼ばれない色</a></td>
+                            <td>式は書棚にあり、ビームはまだ開かない。</td>
+                        </tr>
+                        <tr>
+                            <td><code>audio/PSG.bsv</code></td>
+                            <td><a href="modules/PSG.html">第16章　三本の笛</a></td>
+                            <td>MSX の最初の声。耳の照合はまだ無い。</td>
+                        </tr>
+                        <tr>
+                            <td><code>audio/SCC.bsv</code></td>
+                            <td><a href="modules/SCC.html">第17章　五つの波形</a></td>
+                            <td>メモリの一角に置いた、手描きの波。</td>
+                        </tr>
+                        <tr>
+                            <td><code>audio/PCM.bsv</code></td>
+                            <td><a href="modules/PCM.html">第18章　サンプルの息</a></td>
+                            <td>真ん中の 128 が、沈黙。</td>
+                        </tr>
+                        <tr>
+                            <td><code>io/PPI.bsv</code></td>
+                            <td><a href="modules/PPI.html">第19章　スロットと鍵の番</a></td>
+                            <td>朝、四つの頁はスロット 0 を見ている。</td>
+                        </tr>
+                        <tr>
+                            <td><code>io/Keyboard.bsv</code></td>
+                            <td><a href="modules/Keyboard.html">第20章　十一行の鍵盤</a></td>
+                            <td>口絵は、どの鍵も下ろさないまま止めた。</td>
+                        </tr>
+                        <tr>
+                            <td><code>TopPhase1.bsv</code> … <code>TopPhase5.bsv</code></td>
+                            <td><a href="modules/TopPhase.html">第21章　組み立ての足場</a></td>
+                            <td>人が住むのは、足場を外したあとの部屋。</td>
                         </tr>
                     </tbody>
                 </table>
@@ -162,13 +272,13 @@
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">03 / Map</span>
-                <h2 class="jp-title">3. クロックと物理番地 (Clock And Physical Map)</h2>
-                <p class="band-eyebrow">57.2727 MHz · 24-bit Flat Address · C-BIOS turbo R</p>
+                <span class="band-index">附録 A</span>
+                <h2 class="jp-title">附録 A。棚の番地 (The Shelves)</h2>
+                <p class="band-eyebrow">57.2727 MHz · 24-bit · C-BIOS turbo R</p>
             </div>
             <div class="doc-summary">
-                メモリモデルの初期値は <code>0xFF</code>。カートリッジ A は <code>0x100000</code>。<br>
-                <span class="summary-en">"BIOS, sub-ROM, mapper RAM, two cartridge windows, and VRAM share one 24-bit space. The harness loads C-BIOS turbo R before the cartridge."</span>
+                第2章の時計と第5章の窓を、一枚の表に戻しておく。記憶は朝、すべて <code>0xFF</code> で満たされている。ハーネスはカートリッジの前に、C-BIOS の turbo R を BIOS の棚へ置く。
+                <span class="summary-en">"The clock of chapter 2 and the windows of chapter 5, set back into one table. Memory wakes full of 0xFF. The harness lays C-BIOS turbo R on the BIOS shelf before the cartridge."</span>
             </div>
             <div class="market-table-wrap">
                 <table class="market-table">
@@ -196,9 +306,14 @@
                             <td>スロット 3-0。</td>
                         </tr>
                         <tr>
+                            <td><code>0x080000</code></td>
+                            <td>影の DRAM</td>
+                            <td>S1990 のビット 6 が下りたとき、スロット 0-0 が BIOS の代わりに開く。</td>
+                        </tr>
+                        <tr>
                             <td><code>0x100000</code></td>
                             <td>カートリッジ A</td>
-                            <td>CPU <code>$0000</code> が物理 <code>0x100000</code>、<code>$4000</code> が <code>0x104000</code>。16 KB はページ 1 と 2 に鏡写し。48 KB で <code>$4000</code> に <code>AB</code> がある像はページ 0 から載る。</td>
+                            <td>CPU <code>$0000</code> が物理 <code>0x100000</code>、<code>$4000</code> が <code>0x104000</code>。NOTE: 16 KB をページ 1 と 2 に鏡写しするのはハーネスである。スロット係の BSV はバンクを持たない。48 KB で <code>$4000</code> に <code>AB</code> がある像は、ハーネスがページ 0 から載せる。</td>
                         </tr>
                         <tr>
                             <td><code>0x200000</code></td>
@@ -217,13 +332,13 @@
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">04 / Frames</span>
-                <h2 class="jp-title">4. 起動の絵 (Frames That Drew)</h2>
-                <p class="band-eyebrow">MSX_LOGO · YAZZIER · Dynamite Go! Go! · Night Raven</p>
+                <span class="band-index">附録 B</span>
+                <h2 class="jp-title">附録 B。口絵より前の絵 (Earlier Plates)</h2>
+                <p class="band-eyebrow">YAZZIER · Dynamite Go! Go! · Night Raven</p>
             </div>
             <div class="doc-summary">
-                五枚は Verilator が書いた PPM からの PNG である。縦縞はビームが 168 歩で 256 画素を埋めるための補間で、絵の識別はできる。<br>
-                <span class="summary-en">"Five frames from the archived PPM files. Vertical stripes are the 168-step beam fill. The picture is still the title the cartridge wrote."</span>
+                口絵の二枚が、この本の表に出す絵である。ここからの五枚は同じランナーの以前の PPM で、縦の縞は第13章のビームが 168 歩を 256 画素に引き伸ばした跡である。口絵の AUREL VAULT は VRAM から描き直してあり、その縞は乗っていない。
+                <span class="summary-en">"The two plates of the frontispiece are the pictures this book puts forward. These five are earlier PPM files from the same runner. Their vertical stripes are chapter 13's beam, stretching 168 steps into 256 pixels. The AUREL VAULT plate was redrawn from VRAM, and those stripes are not on it."</span>
             </div>
 
             <div class="plate-row">
@@ -249,7 +364,8 @@
                             <span>PC 0x0391 · SP 0x2EFE · R800</span>
                         </figcaption>
                     </figure>
-                    <p>「The cracker: Egor」「keyboard type: JP」「No ROM in slot」が読める。末尾の SP はページ 0 に落ちており、割り込み後のスタックは未解決。</p>
+                    <p>「The cracker: Egor」「keyboard type: JP」「No ROM in slot」が読める。画面 2 の文字は、この枚で出ている。</p>
+                    <p><strong>NOTE:</strong> 末尾の SP はページ 0 に落ちている。理由は、割り込みのあとスタックがどこで壊れたか、この枚だけでは決まっていないこと。</p>
                 </div>
                 <div class="cell">
                     <figure class="plate">
@@ -273,7 +389,8 @@
                             <span>PC 0xCC2F · SP 0xF2FA · R800</span>
                         </figcaption>
                     </figure>
-                    <p>メニューが読める。「ARROWS OR JOYSTICK」「SPACE TO LAUNCH」。14 色。これは VDP のスキャンアウトであり、Geo3D 演算器ではない。</p>
+                    <p>メニューが読める。「ARROWS OR JOYSTICK」「SPACE TO LAUNCH」。14 色。CPU が VRAM に書いた絵を、V9958 が走査している。</p>
+                    <p><strong>NOTE:</strong> Geo3D の演算器は無い。理由は、<code>Geo3D.bsv</code> がツリーに無く、このメニューがそのコプロセッサを呼んでいないこと。</p>
                 </div>
                 <div class="cell">
                     <figure class="plate">
@@ -285,20 +402,21 @@
                             <span>PC 0xEC60 · SP 0xF2FE · R800</span>
                         </figcaption>
                     </figure>
-                    <p>星と星雲と、右の惑星。CPU が VRAM に書いた絵を V9958 が走査している。幾何アクセラレータの BSV は無い。</p>
+                    <p>星と星雲と、右の惑星。CPU が VRAM に書いた絵を V9958 が走査している。</p>
+                    <p><strong>NOTE:</strong> 幾何アクセラレータは無い。理由は、<code>Geo3D.bsv</code> が無く、この惑星も VDP の走査であること。</p>
                 </div>
             </div>
         </section>
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">05 / Record</span>
-                <h2 class="jp-title">5. 十四本の起動記録 (Every Cartridge)</h2>
+                <span class="band-index">附録 C</span>
+                <h2 class="jp-title">附録 C。十四本の台帳 (The Ledger)</h2>
                 <p class="band-eyebrow">assets/msx/*.rom · Exit 0 · CARTRIDGE BOOT SUCCESS</p>
             </div>
             <div class="doc-summary">
-                20 フレーム、サイクル上限 2 億。長い四本は 120 フレーム、上限 4 億。<code>build/bx8/frames-20/summary.txt</code> が台帳。<br>
-                <span class="summary-en">"Every ROM reached its cartridge init vector. A reached vector is not a finished picture. Disk images were not booted."</span>
+                短い走行は 20 フレーム、上限 2 億サイクル。長い四本は 120 フレーム、上限 4 億。<code>build/bx8/frames-20/summary.txt</code> が台帳で、PC の列はそこを写している。口絵と、その後の Bad Apple の消息は、絵の列に書く。初期化番地へ届くことと、絵が完成することは、別の出来事である。
+                <span class="summary-en">"The short runs are twenty frames, capped at two hundred million cycles. Four longer ones are one hundred twenty frames. The PC column copies build/bx8/frames-20/summary.txt. The frontispiece, and the later news of Bad Apple, are written in the picture column. Reaching an init vector and finishing a picture are different events."</span>
             </div>
             <div class="market-table-wrap">
                 <table class="market-table">
@@ -327,7 +445,7 @@
                             <td><b>MSX_LOGO-clean-final.rom</b></td>
                             <td>16 KB、CHGMOD 5</td>
                             <td><code>0x4075</code> / <code>0xF2E8</code> Z80</td>
-                            <td><a href="frames/logo-clean.png">ロゴ、15 色</a></td>
+                            <td><a href="frames/logo-clean.png">五色のロゴ</a>（表札）</td>
                         </tr>
                         <tr>
                             <td><b>YAZZIER.ROM</b></td>
@@ -345,37 +463,37 @@
                             <td><b>c0man.rom</b></td>
                             <td>16 KB、BIOS の SCREEN 1 のまま</td>
                             <td><code>0x0345</code> / <code>0xF350</code> Z80</td>
-                            <td><a href="frames/c0man.png">青一色</a>。ネームは 0。スプライトは VRAM にあるが描かない。120 フレームでも BIOS の OTIR から出ない。</td>
+                            <td><a href="frames/c0man.png">青一色</a>。NOTE: ネームは 0。スプライトは VRAM にあるが走査が描かない。表示は下りて枠色だけが返り、120 フレームでも BIOS の OTIR から出ない。</td>
                         </tr>
                         <tr>
                             <td><b>xracing_v1.0.4.rom</b></td>
                             <td>48 KB、ページ 0 から。<code>$4000</code> の <code>AB</code>、初期化 <code>0x4010</code></td>
                             <td><code>0x19B6</code> / <code>0xEA90</code> Z80</td>
-                            <td><a href="frames/xracing.png">黒</a>。LDIR までは SP <code>0xF37C</code>。その後スタックが壊れる。</td>
+                            <td><a href="frames/xracing.png">黒</a>。NOTE: LDIR までは SP <code>0xF37C</code>。その後スタックが RAM を離れる。原因は未確定。</td>
                         </tr>
                         <tr>
                             <td><b>Bad Apple (ASCII16)</b></td>
                             <td>2 MB、ホスト側 ASCII16。初期化 <code>0x4810</code></td>
-                            <td><code>0x0039</code>、SP が流れ続ける Z80</td>
-                            <td><a href="frames/badapple.png">黒</a>。<code>$0038</code> のベクタ JP を繰り返し引退する。</td>
+                            <td>台帳は <code>0x0039</code>。現行のコアは C-BIOS の乗算 <code>$3196</code>。Z80</td>
+                            <td><a href="frames/badapple.png">黒</a>。NOTE: <code>EX (SP),HL</code> と <code>SBC HL,ss</code> のあと除算は戻る。355 フレームまで色は一つ。ネームテーブルは 0。PC は C-BIOS の乗算 <code>$3196</code>、SP は <code>$4E96</code>、R#1 は <code>0x60</code>。参照の画面 1 の影にはまだなっていない。</td>
                         </tr>
                         <tr>
                             <td><b>BULLRUSH.ROM</b></td>
                             <td>1 MB、ASCII16、R800</td>
                             <td><code>0xEC00</code> / <code>0xF2FC</code></td>
-                            <td><a href="frames/bullrush.png">緑一色</a>。ネームテーブルは「C-BIOS」。SCREEN 0 をまだ走査しない。</td>
+                            <td><a href="frames/bullrush.png">緑一色</a>。NOTE: ネームテーブルの「C-BIOS」は VRAM にある。画面 0 は文字を歩かず、R#7 の上位ニブルのパレット色を一面に返す。</td>
                         </tr>
                         <tr>
                             <td><b>AUREL_VAULT.rom</b></td>
                             <td>1 MB、ASCII16、R800</td>
-                            <td><code>0x8D94</code> / <code>0xF2FA</code></td>
-                            <td><a href="frames/aurel.png">緑一色</a>。VRAM は埋まっている。モードは 1 / 2 / 5 ではない。</td>
+                            <td>台帳 <code>0x8D94</code> / <code>0xF2FA</code>。題字の長い実行は BIOS <code>$19Bx</code> を周回する。</td>
+                            <td><a href="frames/aurel.png">題字</a>（表札）。画面 8、EPAL。Solo Game Author は <a href="https://github.com/kanon-ai">@kanon-ai</a>。NOTE: キャプション帯は無い。y が 175 以降は絵の続きで、HMMV と字形の LMMM は未発行。20 フレームの平らな緑は <a href="frames/aurel-flat.png">別枚</a>。</td>
                         </tr>
                         <tr>
                             <td><b>btron8.rom</b></td>
                             <td>MegaROM、R800</td>
                             <td><code>0xFF94</code> / <code>0xEFBB</code></td>
-                            <td><a href="frames/btron8.png">黒</a></td>
+                            <td><a href="frames/btron8.png">黒</a>。NOTE: 画面 7。走査の列が無く、R#7 の上位ニブルの平らな色のまま。</td>
                         </tr>
                         <tr>
                             <td><b>NIGHT_RAVEN_FLIGHT_DEMO</b></td>
@@ -393,26 +511,26 @@
                             <td><b>NEON_REVENANT</b></td>
                             <td>4 MB、ASCII16、R800</td>
                             <td><code>0x026B</code> / <code>0xF2CD</code></td>
-                            <td><a href="frames/neon.png">暗い面</a>。20 フレーム、SP は RAM の中。</td>
+                            <td><a href="frames/neon.png">暗い面</a>。NOTE: 400 フレームのあと R#2 は <code>0x1F</code>、表示は頁 0 の細いヘッダのまま。メニューは頁の外にあり、Y=512 からの HMMM は着いていない。その走行の PC は <code>$19BD</code>。</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="doc-summary" style="margin-top:1.4rem;">
-                <code>assets/msx/</code> のディスク七枚（512 Bytes MSX1 Demo、An Uncle in Brazil、Audio Wave 3、Bad Apple Pyhesty、IOD GIF Demo、Puzzle Egg、Xmas Demo）は実行していない。FDC もディスク ROM も無い。ブートセクタを偽らない。<br>
+                <strong>NOTE:</strong> <code>assets/msx/</code> のディスク七枚（512 Bytes MSX1 Demo、An Uncle in Brazil、Audio Wave 3、Bad Apple Pyhesty、IOD GIF Demo、Puzzle Egg、Xmas Demo）は実行していない。理由は、FDC もディスク ROM も無く、ブートセクタを偽らないこと。<br>
                 <span class="summary-en">"Seven disk images stay on disk. There is no WD2793 and no disk ROM in bx8."</span>
             </div>
         </section>
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">06 / Limits</span>
-                <h2 class="jp-title">6. まだ機械に無いもの (Not In This Machine)</h2>
-                <p class="band-eyebrow">Screen 0 · Sprites · IRQ Stack · No Bitstream</p>
+                <span class="band-index">附録 D</span>
+                <h2 class="jp-title">附録 D。まだ頁になっていないもの (What Has No Chapter Yet)</h2>
+                <p class="band-eyebrow">Screen 0 · Sprites · YJK closed · No bitstream</p>
             </div>
             <div class="doc-summary">
-                絵が平らな理由は、起動失敗とは別である。<br>
-                <span class="summary-en">"A flat frame can mean a missing scan mode. A smashed stack is a different bug. Neither has been patched by guessing."</span>
+                実装してある道は、各章に書いた。口絵の二枚が、いま絵として確定している範囲である。下の表は、まだ安定していないものだけを NOTE として置く。
+                <span class="summary-en">"What is implemented is written in the chapters. The two plates are the pictures this machine has cleared. The table below is only what is not yet stable, each row a NOTE."</span>
             </div>
             <div class="market-table-wrap">
                 <table class="market-table">
@@ -425,27 +543,47 @@
                     <tbody>
                         <tr>
                             <td>SCREEN 0</td>
-                            <td>モード <code>5'b00001</code> は R#7 の背景色で塗る。BULLRUSH の「C-BIOS」文字は VRAM にあり、画面には出ない。</td>
+                            <td>NOTE: モード <code>0x01</code> は文字を歩かない。表示中のその他のモードと同じく、画素は R#7 の上位ニブルのパレット色を一面に返す。BULLRUSH の「C-BIOS」は VRAM にあり、画面には出ない。</td>
                         </tr>
                         <tr>
                             <td>スプライト</td>
-                            <td>モード 1 のスプライト走査は無い。c0man の青は、空のネームテーブルと未描画のスプライトの結果。</td>
+                            <td>NOTE: スプライトの床は VDPRegs が計算し、走査はそこを読まない。c0man の青は、空のネームと、VRAM にあるまま描かれないスプライトと、下りた表示の枠色である。</td>
                         </tr>
                         <tr>
-                            <td>割り込みと SP</td>
-                            <td>Bad Apple は <code>PC=0x0039</code> に張り付く。xracing は正常な LDIR のあと SP が RAM を離れる。原因は未確定。</td>
+                            <td>画面 8 と EPAL</td>
+                            <td>ある。<a href="modules/V9958.html">V9958</a> が R#20 ビット 4 で pal256 を引く。表札の AUREL VAULT の題字がそれ。NOTE: YJK の復号は <a href="modules/YJK.html">関数だけ</a>で、走査は呼ばない。記録された R#25 は 0 である。</td>
+                        </tr>
+                        <tr>
+                            <td>画面 6 / 7</td>
+                            <td>NOTE: 走査の列が無い。画素は R#7 の上位ニブルのパレット色である。btron8 は画面 7 のまま、その平らな色。</td>
+                        </tr>
+                        <tr>
+                            <td>Bad Apple</td>
+                            <td><code>EX (SP),HL</code> と <code>SBC HL,ss</code> は <a href="modules/CPUCore.html">CPUCore</a> にあり、除算は戻る。NOTE: 現行のフレームは黒のまま。ネームテーブルは 0、PC は C-BIOS の乗算 <code>$3196</code>、R#1 は <code>0x60</code>。台帳の <code>PC=0x0039</code> はその前の記録。</td>
+                        </tr>
+                        <tr>
+                            <td>NEON REVENANT</td>
+                            <td>NOTE: 400 フレームのあと R#2 は <code>0x1F</code>、表示ページは細いヘッダのまま。メニューをページ 0 へコピーする HMMM は、その枚ではまだ着いていない。</td>
+                        </tr>
+                        <tr>
+                            <td>xracing の SP</td>
+                            <td>NOTE: 台帳では LDIR のあと SP が RAM を離れる。原因は未確定。</td>
                         </tr>
                         <tr>
                             <td>ASCII16 バンク</td>
-                            <td>バンク切替はハーネスのホスト側。BSV のスロットマネージャはまだバンクを持たない。</td>
+                            <td>NOTE: バンク切替はハーネスのホスト側。BSV のスロットマネージャはバンクレジスタを持たない。</td>
                         </tr>
                         <tr>
                             <td>OPLL / Geo3D / FDC</td>
-                            <td><code>OPLL.bsv</code> も <code>Geo3D.bsv</code> もフロッピー制御も無い。</td>
+                            <td>NOTE: <code>OPLL.bsv</code> も <code>Geo3D.bsv</code> もフロッピー制御も無い。バスの番号 3 は空席である。</td>
+                        </tr>
+                        <tr>
+                            <td>音</td>
+                            <td>NOTE: PSG、SCC、PCM のレジスタと拍は各章にある。参照機との耳の照合は残していない。固定した走行は絵である。</td>
                         </tr>
                         <tr>
                             <td>基板</td>
-                            <td>ULX3S 用 Yosys スクリプトはある。ビットストリームは生成していない。焼いていない。</td>
+                            <td>NOTE: ULX3S 用 Yosys スクリプトはある。ビットストリームは生成していない。焼いていない。</td>
                         </tr>
                     </tbody>
                 </table>
@@ -454,13 +592,13 @@
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">07 / Reproduce</span>
-                <h2 class="jp-title">7. 同じ絵を出す (Reproduce A Frame)</h2>
+                <span class="band-index">附録 E</span>
+                <h2 class="jp-title">附録 E。同じ絵をもう一度 (Reading the Plates Again)</h2>
                 <p class="band-eyebrow">make run_rom · MSX_FRAMES · MSX_VRAM</p>
             </div>
             <div class="doc-summary">
-                デポのルートで。既定の ROM は <code>assets/msx/MSX_LOGO.rom</code>。<br>
-                <span class="summary-en">"The Makefile resolves the depot root from src/emulators/bx8/sim/verilator, five levels up. BIOS lookup walks the same distance."</span>
+                デポの根から走る。既定の ROM は五色のロゴ、<code>assets/msx/MSX_LOGO.rom</code> である。Makefile は <code>src/emulators/bx8/sim/verilator</code> から五段上をデポと見なし、BIOS も同じ距離を歩く。
+                <span class="summary-en">"Run from the root of the depot. The default ROM is the five-color logo. The Makefile counts five levels up from src/emulators/bx8/sim/verilator, and the BIOS walks the same distance."</span>
             </div>
             <div class="market-table-wrap">
                 <table class="market-table">
@@ -482,8 +620,8 @@
 
         <section class="doc-section">
             <div class="band-head">
-                <span class="band-index">08 / Links</span>
-                <h2 class="jp-title">8. 隣の実験室 (Adjacent Laboratories)</h2>
+                <span class="band-index">隣室</span>
+                <h2 class="jp-title">隣の実験室 (The Next Rooms)</h2>
                 <p class="band-eyebrow">tronMSX · C-BIOS · Emulators Index</p>
             </div>
             <div class="related-grid">

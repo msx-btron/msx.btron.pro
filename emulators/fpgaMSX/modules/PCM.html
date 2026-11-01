@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第18章 サンプルの息 — PCM | fpgaMSX | msx.btron.pro</title>
+    <meta name="description" content="fpgaMSX の第18章。turbo R の PCM。無音は 0x80。息は Z80 の 228 歩に一度。">
+    <link rel="stylesheet" href="../../../index.css?v=3">
+</head>
+<body>
+    <nav class="sticky" aria-label="Site navigation">
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">MSX <span class="logo-tag">btron.pro</span></a>
+            <ul class="nav-links">
+                <li><a href="../../../computers/index.html">Computers</a></li>
+                <li><a href="../../../development/index.html">Development</a></li>
+                <li><a href="../../../emulators/index.html" class="active">Emulators</a></li>
+                <li><a href="../../../games/index.html">Games</a></li>
+                <li><a href="../../../systems/index.html">Systems</a></li>
+                <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-MSX</a></li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="setting-nav">
+        <a href="../../../index.html">MSX</a>
+        <span class="sep">/</span>
+        <a href="../../../emulators/index.html">Emulators</a>
+        <span class="sep">/</span>
+        <a href="../index.html">BX-8</a>
+        <span class="sep">/</span>
+        <span class="current">サンプルの息</span>
+    </nav>
+    <div class="setting-hero">
+        <div class="setting-hero-badge">第十八章 · audio/PCM.bsv</div>
+        <h1>サンプルの息</h1>
+        <div class="subtitle">
+            ターボ R が笛でも波でもない声を出すとき、それは 0 から 255 の一本のサンプルである。真ん中の 128 が、沈黙である。
+            <span class="subtitle-en">"When the turbo R speaks in a voice that is neither pipe nor wave, it is one sample from 0 to 255. The middle, 128, is silence."</span>
+        </div>
+    </div>
+    <main class="wrap">
+        <a href="../index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 表紙の二枚へ戻る</a>
+        
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">01 / Breath</span>
+                <h2 class="jp-title">1. $A4 にサンプル、$A5 に作法</h2>
+                <p class="band-eyebrow">ラッチするか、近づくか</p>
+            </div>
+            <div class="doc-summary">ポート $A4 へ書いた 8 ビットが、次に出したい高さである。$A5 のビット 0 が立っていれば、次の息でその高さをぴたりと掴む。ビット 0 が下りていれば、現在の高さから一歩に 48 までしか近づかない。ビット 1 は、DAC そのものを生かすかである。朝の制御は 0x03 で、掴む方と DAC の両方が有効、朝のサンプルは 0x80 の沈黙である。$A4 を読むと息のカウンタの下位 2 ビットが返り、相手はそれで手渡しを知る。$A5 の読出は、制御の下位 5 ビットである。
+            <span class="summary-en">"The eight bits written to port $A4 are the next height. If bit 0 of $A5 is up, the next breath takes that height exactly. If bit 0 is down, the current height may approach it by at most 48 in one breath. Bit 1 enables the DAC itself. The morning control is 0x03, so both the exact take and the DAC are on, and the morning sample is the silence at 0x80. Reading $A4 returns the low two bits of the breath counter, which is how the other side knows the handoff. Reading $A5 returns the low five bits of the control."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">02 / Queue</span>
+                <h2 class="jp-title">2. 228 歩に一度</h2>
+                <p class="band-eyebrow">書込は列に置き、息の規則と喧嘩しない</p>
+            </div>
+            <div class="doc-summary">息は Z80 の 228 歩に一度、およそ 15.7 kHz である。CPU の書込は一度列に置き、息の規則と同じレジスタを同じ拍で奪い合わない。近づく計算のためのレジスタは 9 ビットで、符号が収まる。朝の高さは 128、沈黙の <code>0x80</code> である。表紙の二枚は、キーを待たずに止めた絵であり、この声のサンプルもその枚には載せていない。
+            <span class="summary-en">"A breath is once every 228 Z80 steps, about 15.7 kHz. A write from the CPU waits in a queue, so it does not seize the same registers as the breath in one beat. The register used while approaching is nine bits wide, enough for a sign. The morning height is 128, the silence at 0x80. The two plates on the cover were stopped without waiting for a key, and those frames do not carry a sample of this voice."</span>
+            </div>
+            <div class="doc-summary"><strong>NOTE:</strong> この息を参照機と突き合わせた記録は無い。理由は、頁に残した走行が絵だけで、PCM のサンプル列を残していないこと。
+            <span class="summary-en">"NOTE: there is no comparison of this breath against a reference machine. The runs kept on the page are pictures, and they did not keep a PCM sample stream."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">※</span>
+                <h2 class="jp-title">章のあいだ</h2>
+                <p class="band-eyebrow">fpgaMSX · bx8</p>
+            </div>
+            <div class="related-grid"><a href="SCC.html" class="related-card"><h4>五つの波形 <span>←</span></h4><p>前の章。</p></a><a href="../index.html" class="related-card"><h4>表紙 <span>↑</span></h4><p>二枚の絵と、この本の目次。</p></a><a href="PPI.html" class="related-card"><h4>スロットと鍵の番 <span>→</span></h4><p>次の章。</p></a></div>
+        </section>
+    </main>
+    <footer class="app-footer">
+        <div class="wrap">
+            <div class="footer-columns">
+                <div>
+                    <h4>Computers</h4>
+                    <ul>
+                        <li><a href="../../../computers/Sony HB-F900/index.html">Sony HB-F900</a></li>
+                        <li><a href="../../../computers/Sony HB-G900AP/index.html">Sony HB-G900AP</a></li>
+                        <li><a href="../../../computers/Victor HC-95 AB/index.html">Victor HC-95 AB</a></li>
+                        <li><a href="../../../computers/Yamaha YIS-805 256/index.html">Yamaha YIS-805 256</a></li>
+                        <li><a href="../../../computers/Panasonic FS-A1FM/index.html">Panasonic FS-A1FM</a></li>
+                        <li><a href="../../../computers/Hitachi MB-H70/index.html">Hitachi MB-H70</a></li>
+                        <li><a href="../../../computers/index.html">全13機種一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Systems</h4>
+                    <ul>
+                        <li><a href="../../../systems/btron/index.html">8-bit BTRON</a></li>
+                        <li><a href="../../../systems/msx-bios/index.html">MSX-BIOS</a></li>
+                        <li><a href="../../../systems/msx-dos/index.html">MSX-DOS 2</a></li>
+                        <li><a href="../../../systems/c-bios/index.html">C-BIOS</a></li>
+                        <li><a href="../../../systems/uzix/index.html">UZIX (Unix V7)</a></li>
+                        <li><a href="../../../systems/index.html">基本ソフト一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Development</h4>
+                    <ul>
+                        <li><a href="../../../development/sdcc/index.html">SDCC Compiler</a></li>
+                        <li><a href="../../../development/pasmo/index.html">Pasmo Assembler</a></li>
+                        <li><a href="../../../development/index.html">Toolchain Overview</a></li>
+                        <li><a href="https://btron.pro/btron/doc/txt/MSX-SOUND.txt" target="_blank">MSX Sound Spec</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Emulators</h4>
+                    <ul>
+                        <li><a href="../../../emulators/openMSX/index.html">openMSX</a></li>
+                        <li><a href="../../../emulators/blueMSX/index.html">blueMSX</a></li>
+                        <li><a href="../../../emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="../index.html" class="active">fpgaMSX (bx8)</a></li>
+                        <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 4.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.84rem; color: var(--ink-3); display: flex; flex-direction: column; align-items: center; gap: 1.6rem;">
+                <a href="../../../sakazaki.svg" title="Sakazaki Clan Kamon — 二蓋笠 (Nigai-gasa)" style="display: inline-block; text-decoration: none; margin-bottom: 0.2rem;">
+                    <img src="../../../sakazaki.svg" alt="Sakazaki Order Logo" style="width: 108px; height: auto; display: block; opacity: 0.88; transition: opacity 0.25s ease, transform 0.25s ease;">
+                </a>
+                <div class="footer-legal">
+                    <p style="margin: 0 0 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #b8c0c8; font-size: 0.81rem;">
+                        &copy; 2026 Cryptographics Telesystems, LLC. Ukraine. All rights reserved.
+                    </p>
+                    <p style="margin: 0 0 0.9rem; line-height: 1.75;">
+                        <b>TRADEMARK &amp; COMPLIANCE DISCLOSURE:</b> MSX&trade; is a registered trademark of MSX Licensing Corporation and ASCII Corporation. TRON, BTRON, and μITRON are trademarks of TRON Forum and Professor Ken Sakamura. SONY&reg;, HitBit&trade;, and G-ZERO&trade; are trademarks or registered trademarks of Sony Group Corporation / Sony Corporation. Hitachi&reg; is a registered trademark of Hitachi, Ltd. Panasonic&reg; (Panasonic Holdings Corporation), Victor / JVC&reg; (JVCKENWOOD Corporation), and Yamaha&reg; (Yamaha Corporation) are trademarks of their respective proprietors. All manufacturer designations, hardware component identifiers, and registered software titles cited within this repository are the property of their respective trademark holders and are reproduced strictly under statutory fair use doctrine for non-commercial historical preservation, register-level hardware documentation, and cleanroom interoperability engineering.
+                    </p>
+                    <p style="margin: 0; line-height: 1.75; color: #69747e; font-size: 0.74rem;">
+                        msx.btron.pro &nbsp;·&nbsp; MSX Archival &amp; Technical Portal &nbsp;·&nbsp; Under ISC / MIT Licence &nbsp;·&nbsp; Conforming to DOCOPS &amp; PUBLISH Standards
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第5章 四つの頁と六つの窓 — SlotManager | fpgaMSX | msx.btron.pro</title>
+    <meta name="description" content="fpgaMSX の第5章。CPU の 16 ビットを、BIOS とカートリッジと RAM の 24 ビットの窓へ案内する。">
+    <link rel="stylesheet" href="../../../index.css?v=3">
+</head>
+<body>
+    <nav class="sticky" aria-label="Site navigation">
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">MSX <span class="logo-tag">btron.pro</span></a>
+            <ul class="nav-links">
+                <li><a href="../../../computers/index.html">Computers</a></li>
+                <li><a href="../../../development/index.html">Development</a></li>
+                <li><a href="../../../emulators/index.html" class="active">Emulators</a></li>
+                <li><a href="../../../games/index.html">Games</a></li>
+                <li><a href="../../../systems/index.html">Systems</a></li>
+                <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-MSX</a></li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="setting-nav">
+        <a href="../../../index.html">MSX</a>
+        <span class="sep">/</span>
+        <a href="../../../emulators/index.html">Emulators</a>
+        <span class="sep">/</span>
+        <a href="../index.html">BX-8</a>
+        <span class="sep">/</span>
+        <span class="current">四つの頁と六つの窓</span>
+    </nav>
+    <div class="setting-hero">
+        <div class="setting-hero-badge">第五章 · memory/SlotManager.bsv</div>
+        <h1>四つの頁と六つの窓</h1>
+        <div class="subtitle">
+            MSX のメモリは、一枚の長い紙ではない。16 KB ごとの頁に、どの棚を見るかを書いた札が貼ってある。
+            <span class="subtitle-en">"MSX memory is not one long sheet. Every 16 KB page carries a card that says which shelf to open."</span>
+        </div>
+    </div>
+    <main class="wrap">
+        <a href="../index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 表紙の二枚へ戻る</a>
+        
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">01 / Shelves</span>
+                <h2 class="jp-title">1. 棚</h2>
+                <p class="band-eyebrow">BIOS · サブ ROM · RAM · 二つのカートリッジ · 影</p>
+            </div>
+            <div class="doc-summary">リセットの瞬間、四つの頁はすべてスロット 0 を見ている。ポート A は 0 である。C-BIOS はそこから起き、のちにポート A を書き換えてスロット 1 のカートリッジを頁に貼る。空の頁を読むと 0xFF が返り、書いたものは残らない。ROM の棚への書込は床に落ちる。CHKRAM が BIOS を塗り潰さないための、静かな床である。
+            <span class="summary-en">"At reset every page looks at slot 0, because port A is 0. C-BIOS wakes there, then rewrites port A and pins the cartridge in slot 1 onto a page. An empty page reads 0xFF and keeps nothing that is written. A write aimed at a ROM shelf falls on the floor, so CHKRAM cannot paint over the BIOS."</span>
+            </div>
+            <div class="doc-summary">棚の番地は固定である。メイン BIOS は 0x000000、サブ ROM は 0x008000、マッパの RAM は 0x010000、影の DRAM は 0x080000、カートリッジ A は 0x100000、カートリッジ B は 0x200000。CPU の $4000 がカートリッジ A なら、物理は 0x104000 になる。
+            <span class="summary-en">"The shelves are fixed: main BIOS at 0x000000, sub-ROM at 0x008000, mapper RAM at 0x010000, shadow DRAM at 0x080000, cartridge A at 0x100000, cartridge B at 0x200000. CPU address $4000 on cartridge A is physical 0x104000."</span>
+            </div>
+            <div class="doc-summary"><strong>NOTE:</strong> ASCII16 のバンクは、この章に無い。理由は、短い ROM を頁 1 と頁 2 の両方に見せる仕事も、バンクの切替も、外のハーネスがしていて、スロット係の BSV がバンクレジスタを持たないこと。
+            <span class="summary-en">"NOTE: ASCII16 banks are not in this chapter. Showing a short ROM on both page 1 and page 2, and switching banks, is the harness outside. The slot keeper's BSV has no bank register."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">02 / FFFF</span>
+                <h2 class="jp-title">2. $FFFF の反転</h2>
+                <p class="band-eyebrow">拡張スロット · DRAM の影</p>
+            </div>
+            <div class="doc-summary">拡張スロットは、スロットごとに $FFFF へもう一枚の札を持つ。読んだ値は、しまってある値の白黒が反転して戻る。MSX のバスが昔からそう答えているからである。S1990 が DRAM モードを告げたとき、スロット 0-0 は BIOS の ROM ではなく 0x080000 の影を開く。影が無いときのスロット 0-0 は、いつもの BIOS である。
+            <span class="summary-en">"An expanded slot keeps a second card at $FFFF. A read returns the stored byte with its bits flipped, because that is how the MSX bus has always answered. When the S1990 announces DRAM mode, slot 0-0 opens the shadow at 0x080000. Otherwise slot 0-0 is the ordinary BIOS."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">※</span>
+                <h2 class="jp-title">章のあいだ</h2>
+                <p class="band-eyebrow">fpgaMSX · bx8</p>
+            </div>
+            <div class="related-grid"><a href="MemoryArbiter.html" class="related-card"><h4>誰が話してよいか <span>←</span></h4><p>前の章。</p></a><a href="../index.html" class="related-card"><h4>表紙 <span>↑</span></h4><p>二枚の絵と、この本の目次。</p></a><a href="Mapper.html" class="related-card"><h4>512 KB の引き出し <span>→</span></h4><p>次の章。</p></a></div>
+        </section>
+    </main>
+    <footer class="app-footer">
+        <div class="wrap">
+            <div class="footer-columns">
+                <div>
+                    <h4>Computers</h4>
+                    <ul>
+                        <li><a href="../../../computers/Sony HB-F900/index.html">Sony HB-F900</a></li>
+                        <li><a href="../../../computers/Sony HB-G900AP/index.html">Sony HB-G900AP</a></li>
+                        <li><a href="../../../computers/Victor HC-95 AB/index.html">Victor HC-95 AB</a></li>
+                        <li><a href="../../../computers/Yamaha YIS-805 256/index.html">Yamaha YIS-805 256</a></li>
+                        <li><a href="../../../computers/Panasonic FS-A1FM/index.html">Panasonic FS-A1FM</a></li>
+                        <li><a href="../../../computers/Hitachi MB-H70/index.html">Hitachi MB-H70</a></li>
+                        <li><a href="../../../computers/index.html">全13機種一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Systems</h4>
+                    <ul>
+                        <li><a href="../../../systems/btron/index.html">8-bit BTRON</a></li>
+                        <li><a href="../../../systems/msx-bios/index.html">MSX-BIOS</a></li>
+                        <li><a href="../../../systems/msx-dos/index.html">MSX-DOS 2</a></li>
+                        <li><a href="../../../systems/c-bios/index.html">C-BIOS</a></li>
+                        <li><a href="../../../systems/uzix/index.html">UZIX (Unix V7)</a></li>
+                        <li><a href="../../../systems/index.html">基本ソフト一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Development</h4>
+                    <ul>
+                        <li><a href="../../../development/sdcc/index.html">SDCC Compiler</a></li>
+                        <li><a href="../../../development/pasmo/index.html">Pasmo Assembler</a></li>
+                        <li><a href="../../../development/index.html">Toolchain Overview</a></li>
+                        <li><a href="https://btron.pro/btron/doc/txt/MSX-SOUND.txt" target="_blank">MSX Sound Spec</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Emulators</h4>
+                    <ul>
+                        <li><a href="../../../emulators/openMSX/index.html">openMSX</a></li>
+                        <li><a href="../../../emulators/blueMSX/index.html">blueMSX</a></li>
+                        <li><a href="../../../emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="../index.html" class="active">fpgaMSX (bx8)</a></li>
+                        <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 4.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.84rem; color: var(--ink-3); display: flex; flex-direction: column; align-items: center; gap: 1.6rem;">
+                <a href="../../../sakazaki.svg" title="Sakazaki Clan Kamon — 二蓋笠 (Nigai-gasa)" style="display: inline-block; text-decoration: none; margin-bottom: 0.2rem;">
+                    <img src="../../../sakazaki.svg" alt="Sakazaki Order Logo" style="width: 108px; height: auto; display: block; opacity: 0.88; transition: opacity 0.25s ease, transform 0.25s ease;">
+                </a>
+                <div class="footer-legal">
+                    <p style="margin: 0 0 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #b8c0c8; font-size: 0.81rem;">
+                        &copy; 2026 Cryptographics Telesystems, LLC. Ukraine. All rights reserved.
+                    </p>
+                    <p style="margin: 0 0 0.9rem; line-height: 1.75;">
+                        <b>TRADEMARK &amp; COMPLIANCE DISCLOSURE:</b> MSX&trade; is a registered trademark of MSX Licensing Corporation and ASCII Corporation. TRON, BTRON, and μITRON are trademarks of TRON Forum and Professor Ken Sakamura. SONY&reg;, HitBit&trade;, and G-ZERO&trade; are trademarks or registered trademarks of Sony Group Corporation / Sony Corporation. Hitachi&reg; is a registered trademark of Hitachi, Ltd. Panasonic&reg; (Panasonic Holdings Corporation), Victor / JVC&reg; (JVCKENWOOD Corporation), and Yamaha&reg; (Yamaha Corporation) are trademarks of their respective proprietors. All manufacturer designations, hardware component identifiers, and registered software titles cited within this repository are the property of their respective trademark holders and are reproduced strictly under statutory fair use doctrine for non-commercial historical preservation, register-level hardware documentation, and cleanroom interoperability engineering.
+                    </p>
+                    <p style="margin: 0; line-height: 1.75; color: #69747e; font-size: 0.74rem;">
+                        msx.btron.pro &nbsp;·&nbsp; MSX Archival &amp; Technical Portal &nbsp;·&nbsp; Under ISC / MIT Licence &nbsp;·&nbsp; Conforming to DOCOPS &amp; PUBLISH Standards
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

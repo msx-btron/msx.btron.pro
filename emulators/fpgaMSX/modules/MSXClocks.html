@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2章 一つの時計 — MSXClocks | fpgaMSX | msx.btron.pro</title>
+    <meta name="description" content="fpgaMSX の第2章。57.2727 MHz の一つの時計が、遅い拍と速い拍を同じ針から出す。">
+    <link rel="stylesheet" href="../../../index.css?v=3">
+</head>
+<body>
+    <nav class="sticky" aria-label="Site navigation">
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">MSX <span class="logo-tag">btron.pro</span></a>
+            <ul class="nav-links">
+                <li><a href="../../../computers/index.html">Computers</a></li>
+                <li><a href="../../../development/index.html">Development</a></li>
+                <li><a href="../../../emulators/index.html" class="active">Emulators</a></li>
+                <li><a href="../../../games/index.html">Games</a></li>
+                <li><a href="../../../systems/index.html">Systems</a></li>
+                <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-MSX</a></li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="setting-nav">
+        <a href="../../../index.html">MSX</a>
+        <span class="sep">/</span>
+        <a href="../../../emulators/index.html">Emulators</a>
+        <span class="sep">/</span>
+        <a href="../index.html">BX-8</a>
+        <span class="sep">/</span>
+        <span class="current">一つの時計</span>
+    </nav>
+    <div class="setting-hero">
+        <div class="setting-hero-badge">第二章 · MSXClocks.bsv</div>
+        <h1>一つの時計</h1>
+        <div class="subtitle">
+            機械に時計は一つしかない。遅い Z80 も、速い R800 も、画面のビームも、同じ針の別の歯を見ている。
+            <span class="subtitle-en">"The machine has one clock. The slow Z80, the faster R800, and the beam all read different teeth of the same wheel."</span>
+        </div>
+    </div>
+    <main class="wrap">
+        <a href="../index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 表紙の二枚へ戻る</a>
+        
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">01 / Teeth</span>
+                <h2 class="jp-title">1. 針の歯</h2>
+                <p class="band-eyebrow">div 2 · div 8 · div 16 · div 224</p>
+            </div>
+            <div class="doc-summary">マスタは 57.272728 MHz。カウンタが零に戻った拍だけが、住人への合図になる。領域をまたぐ時計は無い。2 分周が 28.6 MHz、8 分周が 7.16 MHz、16 分周が 3.58 MHz、224 分周が S1990 の E6 タイマである。長い二つの歯、3648 と 1298 は、PCM と混合器のために公開されている。公式の部屋はそこを使わず、自分の指で数える。
+            <span class="summary-en">"The master is 57.272728 MHz. A beat is true only when its counter is zero. There is no second domain. Divide by 2, 8, 16, and 224 name the fast tooth, the R800 tooth, the Z80 tooth, and the E6 timer. The long teeth, 3648 and 1298, are published for PCM and the mixer. The official room counts those with its own fingers."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">02 / Who hears</span>
+                <h2 class="jp-title">2. 誰がどの歯を聞くか</h2>
+                <p class="band-eyebrow">R800 は 7.16 MHz の歯</p>
+            </div>
+            <div class="doc-summary">演算手が実際に一歩進むのは、Z80 のとき 3.58 MHz の歯、R800 のとき 7.16 MHz の歯である。画面の歩みは 3.58 MHz の歯に合わせてある。E6 のタイマは 224 分周の歯を聞く。次の章は、その歩みが運ぶ番地の言葉である。
+            <span class="summary-en">"The processor steps on the 3.58 MHz tooth as a Z80, and on the 7.16 MHz tooth as an R800. The picture walks on the Z80 tooth. The E6 timer listens to the divide-by-224 tooth. The next chapter is the language those steps carry."</span>
+            </div>
+            <div class="doc-summary"><strong>NOTE:</strong> 2 分周の 28.6 MHz は、演算手の扉まで届いて、一歩の条件には入らない。理由は、原稿がこの歯を R800 の内部シーケンサと呼んでいても、実行がそれを読まず、R800 の一歩が 7.16 MHz の歯であること。
+            <span class="summary-en">"NOTE: the divide-by-2 tooth at 28.6 MHz reaches the processor's door and is not the condition of a step. The manuscript calls that tooth the R800's internal sequencer, the step does not read it, and an R800 step is the 7.16 MHz tooth."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">※</span>
+                <h2 class="jp-title">章のあいだ</h2>
+                <p class="band-eyebrow">fpgaMSX · bx8</p>
+            </div>
+            <div class="related-grid"><a href="TopMSXTurboR.html" class="related-card"><h4>機械そのもの <span>←</span></h4><p>前の章。</p></a><a href="../index.html" class="related-card"><h4>表紙 <span>↑</span></h4><p>二枚の絵と、この本の目次。</p></a><a href="Bus.html" class="related-card"><h4>番地の言葉 <span>→</span></h4><p>次の章。</p></a></div>
+        </section>
+    </main>
+    <footer class="app-footer">
+        <div class="wrap">
+            <div class="footer-columns">
+                <div>
+                    <h4>Computers</h4>
+                    <ul>
+                        <li><a href="../../../computers/Sony HB-F900/index.html">Sony HB-F900</a></li>
+                        <li><a href="../../../computers/Sony HB-G900AP/index.html">Sony HB-G900AP</a></li>
+                        <li><a href="../../../computers/Victor HC-95 AB/index.html">Victor HC-95 AB</a></li>
+                        <li><a href="../../../computers/Yamaha YIS-805 256/index.html">Yamaha YIS-805 256</a></li>
+                        <li><a href="../../../computers/Panasonic FS-A1FM/index.html">Panasonic FS-A1FM</a></li>
+                        <li><a href="../../../computers/Hitachi MB-H70/index.html">Hitachi MB-H70</a></li>
+                        <li><a href="../../../computers/index.html">全13機種一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Systems</h4>
+                    <ul>
+                        <li><a href="../../../systems/btron/index.html">8-bit BTRON</a></li>
+                        <li><a href="../../../systems/msx-bios/index.html">MSX-BIOS</a></li>
+                        <li><a href="../../../systems/msx-dos/index.html">MSX-DOS 2</a></li>
+                        <li><a href="../../../systems/c-bios/index.html">C-BIOS</a></li>
+                        <li><a href="../../../systems/uzix/index.html">UZIX (Unix V7)</a></li>
+                        <li><a href="../../../systems/index.html">基本ソフト一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Development</h4>
+                    <ul>
+                        <li><a href="../../../development/sdcc/index.html">SDCC Compiler</a></li>
+                        <li><a href="../../../development/pasmo/index.html">Pasmo Assembler</a></li>
+                        <li><a href="../../../development/index.html">Toolchain Overview</a></li>
+                        <li><a href="https://btron.pro/btron/doc/txt/MSX-SOUND.txt" target="_blank">MSX Sound Spec</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Emulators</h4>
+                    <ul>
+                        <li><a href="../../../emulators/openMSX/index.html">openMSX</a></li>
+                        <li><a href="../../../emulators/blueMSX/index.html">blueMSX</a></li>
+                        <li><a href="../../../emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="../index.html" class="active">fpgaMSX (bx8)</a></li>
+                        <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 4.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.84rem; color: var(--ink-3); display: flex; flex-direction: column; align-items: center; gap: 1.6rem;">
+                <a href="../../../sakazaki.svg" title="Sakazaki Clan Kamon — 二蓋笠 (Nigai-gasa)" style="display: inline-block; text-decoration: none; margin-bottom: 0.2rem;">
+                    <img src="../../../sakazaki.svg" alt="Sakazaki Order Logo" style="width: 108px; height: auto; display: block; opacity: 0.88; transition: opacity 0.25s ease, transform 0.25s ease;">
+                </a>
+                <div class="footer-legal">
+                    <p style="margin: 0 0 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #b8c0c8; font-size: 0.81rem;">
+                        &copy; 2026 Cryptographics Telesystems, LLC. Ukraine. All rights reserved.
+                    </p>
+                    <p style="margin: 0 0 0.9rem; line-height: 1.75;">
+                        <b>TRADEMARK &amp; COMPLIANCE DISCLOSURE:</b> MSX&trade; is a registered trademark of MSX Licensing Corporation and ASCII Corporation. TRON, BTRON, and μITRON are trademarks of TRON Forum and Professor Ken Sakamura. SONY&reg;, HitBit&trade;, and G-ZERO&trade; are trademarks or registered trademarks of Sony Group Corporation / Sony Corporation. Hitachi&reg; is a registered trademark of Hitachi, Ltd. Panasonic&reg; (Panasonic Holdings Corporation), Victor / JVC&reg; (JVCKENWOOD Corporation), and Yamaha&reg; (Yamaha Corporation) are trademarks of their respective proprietors. All manufacturer designations, hardware component identifiers, and registered software titles cited within this repository are the property of their respective trademark holders and are reproduced strictly under statutory fair use doctrine for non-commercial historical preservation, register-level hardware documentation, and cleanroom interoperability engineering.
+                    </p>
+                    <p style="margin: 0; line-height: 1.75; color: #69747e; font-size: 0.74rem;">
+                        msx.btron.pro &nbsp;·&nbsp; MSX Archival &amp; Technical Portal &nbsp;·&nbsp; Under ISC / MIT Licence &nbsp;·&nbsp; Conforming to DOCOPS &amp; PUBLISH Standards
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

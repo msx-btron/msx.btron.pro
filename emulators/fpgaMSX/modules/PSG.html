@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第16章 三本の笛 — PSG | fpgaMSX | msx.btron.pro</title>
+    <meta name="description" content="fpgaMSX の第16章。AY-3-8910。三つのトーンと、17 ビットの雑音と、包絡線。この本の記録は、まだ絵の側にある。">
+    <link rel="stylesheet" href="../../../index.css?v=3">
+</head>
+<body>
+    <nav class="sticky" aria-label="Site navigation">
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">MSX <span class="logo-tag">btron.pro</span></a>
+            <ul class="nav-links">
+                <li><a href="../../../computers/index.html">Computers</a></li>
+                <li><a href="../../../development/index.html">Development</a></li>
+                <li><a href="../../../emulators/index.html" class="active">Emulators</a></li>
+                <li><a href="../../../games/index.html">Games</a></li>
+                <li><a href="../../../systems/index.html">Systems</a></li>
+                <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-MSX</a></li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="setting-nav">
+        <a href="../../../index.html">MSX</a>
+        <span class="sep">/</span>
+        <a href="../../../emulators/index.html">Emulators</a>
+        <span class="sep">/</span>
+        <a href="../index.html">BX-8</a>
+        <span class="sep">/</span>
+        <span class="current">三本の笛</span>
+    </nav>
+    <div class="setting-hero">
+        <div class="setting-hero-badge">第十六章 · audio/PSG.bsv</div>
+        <h1>三本の笛</h1>
+        <div class="subtitle">
+            MSX の最初の声は、三本の笛と、砂のような雑音と、ゆっくり開閉する包絡線である。
+            <span class="subtitle-en">"The first voice of an MSX is three pipes, a noise like sand, and an envelope that opens and closes slowly."</span>
+        </div>
+    </div>
+    <main class="wrap">
+        <a href="../index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 表紙の二枚へ戻る</a>
+        
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">01 / Pipes</span>
+                <h2 class="jp-title">1. $A0 で欄を指し、$A1 で吹く</h2>
+                <p class="band-eyebrow">16 の欄 · 種 0x0ACE</p>
+            </div>
+            <div class="doc-summary">ポート $A0 が十六ある欄のどれを見るかを決め、$A1 が書き、$A2 が読む。三本の笛はそれぞれ周期と極性を持ち、雑音は 17 ビットのシフトレジスタで、朝の種は 0x0ACE、多項式は x の 17 乗に x の 14 乗を足したものに 1 を足す。雑音の周期は、欄 6 の下位 5 ビットを少なくとも 1 にしたあと、二倍する。出る音は、混ぜた和を 5 ビット左へずらした 16 ビットである。音量のビット 4 が立っている声は、固定の音量の代わりにエンベロープの高さを使う。エンベロープの周期は欄 11 と欄 12 を繋いだ 16 ビットで、0 は 1 として扱う。欄 13 へ書くと、形が最初からやり直される。
+            <span class="summary-en">"Port $A0 chooses which of sixteen fields to see, $A1 writes, and $A2 reads. Each of the three pipes has a period and a polarity. The noise is a seventeen-bit shift register, seeded in the morning with 0x0ACE, polynomial x to the 17 plus x to the 14 plus one. The noise period is the low five bits of field 6, at least one, then doubled. The sample is the mixed sum shifted left by five bits. A voice whose volume has bit 4 set uses the envelope height instead of a fixed level. The envelope period is the sixteen bits of fields 11 and 12, and a period of 0 is kept as 1. A write to field 13 restarts the shape from the beginning."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">02 / Tick</span>
+                <h2 class="jp-title">2. 十六歩に一度</h2>
+                <p class="band-eyebrow">Z80 の 16 歩に一度</p>
+            </div>
+            <div class="doc-summary">部屋は、Z80 の 16 歩ごとにこの笛を一歩進める。PSG 自身の時計の 8 分の 1 に相当する。欄と、雑音レジスタの 17 ビットは、外から覗ける。
+            <span class="summary-en">"The room advances these pipes once every sixteen Z80 steps, which is one eighth of the PSG's own clock. The fields, and the seventeen noise bits, can be looked into from outside."</span>
+            </div>
+            <div class="doc-summary"><strong>NOTE:</strong> 笛の波形を参照機と突き合わせた記録は、この本に無い。理由は、頁に固定した走行が絵だけで、音の差分を残していないこと。
+            <span class="summary-en">"NOTE: this book has no comparison of these pipes against a reference machine. The runs fixed on the page are pictures, and they did not keep a sound diff."</span>
+            </div>
+        </section>
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">※</span>
+                <h2 class="jp-title">章のあいだ</h2>
+                <p class="band-eyebrow">fpgaMSX · bx8</p>
+            </div>
+            <div class="related-grid"><a href="YJK.html" class="related-card"><h4>まだ呼ばれない色 <span>←</span></h4><p>前の章。</p></a><a href="../index.html" class="related-card"><h4>表紙 <span>↑</span></h4><p>二枚の絵と、この本の目次。</p></a><a href="SCC.html" class="related-card"><h4>五つの波形 <span>→</span></h4><p>次の章。</p></a></div>
+        </section>
+    </main>
+    <footer class="app-footer">
+        <div class="wrap">
+            <div class="footer-columns">
+                <div>
+                    <h4>Computers</h4>
+                    <ul>
+                        <li><a href="../../../computers/Sony HB-F900/index.html">Sony HB-F900</a></li>
+                        <li><a href="../../../computers/Sony HB-G900AP/index.html">Sony HB-G900AP</a></li>
+                        <li><a href="../../../computers/Victor HC-95 AB/index.html">Victor HC-95 AB</a></li>
+                        <li><a href="../../../computers/Yamaha YIS-805 256/index.html">Yamaha YIS-805 256</a></li>
+                        <li><a href="../../../computers/Panasonic FS-A1FM/index.html">Panasonic FS-A1FM</a></li>
+                        <li><a href="../../../computers/Hitachi MB-H70/index.html">Hitachi MB-H70</a></li>
+                        <li><a href="../../../computers/index.html">全13機種一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Systems</h4>
+                    <ul>
+                        <li><a href="../../../systems/btron/index.html">8-bit BTRON</a></li>
+                        <li><a href="../../../systems/msx-bios/index.html">MSX-BIOS</a></li>
+                        <li><a href="../../../systems/msx-dos/index.html">MSX-DOS 2</a></li>
+                        <li><a href="../../../systems/c-bios/index.html">C-BIOS</a></li>
+                        <li><a href="../../../systems/uzix/index.html">UZIX (Unix V7)</a></li>
+                        <li><a href="../../../systems/index.html">基本ソフト一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Development</h4>
+                    <ul>
+                        <li><a href="../../../development/sdcc/index.html">SDCC Compiler</a></li>
+                        <li><a href="../../../development/pasmo/index.html">Pasmo Assembler</a></li>
+                        <li><a href="../../../development/index.html">Toolchain Overview</a></li>
+                        <li><a href="https://btron.pro/btron/doc/txt/MSX-SOUND.txt" target="_blank">MSX Sound Spec</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Emulators</h4>
+                    <ul>
+                        <li><a href="../../../emulators/openMSX/index.html">openMSX</a></li>
+                        <li><a href="../../../emulators/blueMSX/index.html">blueMSX</a></li>
+                        <li><a href="../../../emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="../index.html" class="active">fpgaMSX (bx8)</a></li>
+                        <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 4.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.84rem; color: var(--ink-3); display: flex; flex-direction: column; align-items: center; gap: 1.6rem;">
+                <a href="../../../sakazaki.svg" title="Sakazaki Clan Kamon — 二蓋笠 (Nigai-gasa)" style="display: inline-block; text-decoration: none; margin-bottom: 0.2rem;">
+                    <img src="../../../sakazaki.svg" alt="Sakazaki Order Logo" style="width: 108px; height: auto; display: block; opacity: 0.88; transition: opacity 0.25s ease, transform 0.25s ease;">
+                </a>
+                <div class="footer-legal">
+                    <p style="margin: 0 0 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #b8c0c8; font-size: 0.81rem;">
+                        &copy; 2026 Cryptographics Telesystems, LLC. Ukraine. All rights reserved.
+                    </p>
+                    <p style="margin: 0 0 0.9rem; line-height: 1.75;">
+                        <b>TRADEMARK &amp; COMPLIANCE DISCLOSURE:</b> MSX&trade; is a registered trademark of MSX Licensing Corporation and ASCII Corporation. TRON, BTRON, and μITRON are trademarks of TRON Forum and Professor Ken Sakamura. SONY&reg;, HitBit&trade;, and G-ZERO&trade; are trademarks or registered trademarks of Sony Group Corporation / Sony Corporation. Hitachi&reg; is a registered trademark of Hitachi, Ltd. Panasonic&reg; (Panasonic Holdings Corporation), Victor / JVC&reg; (JVCKENWOOD Corporation), and Yamaha&reg; (Yamaha Corporation) are trademarks of their respective proprietors. All manufacturer designations, hardware component identifiers, and registered software titles cited within this repository are the property of their respective trademark holders and are reproduced strictly under statutory fair use doctrine for non-commercial historical preservation, register-level hardware documentation, and cleanroom interoperability engineering.
+                    </p>
+                    <p style="margin: 0; line-height: 1.75; color: #69747e; font-size: 0.74rem;">
+                        msx.btron.pro &nbsp;·&nbsp; MSX Archival &amp; Technical Portal &nbsp;·&nbsp; Under ISC / MIT Licence &nbsp;·&nbsp; Conforming to DOCOPS &amp; PUBLISH Standards
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
