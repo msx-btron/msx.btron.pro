@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>摸擬 — エミュレータ基盤とデバッガ | msx.btron.pro</title>
-    <meta name="description" content="MSX エミュレータ技術の総合比較と解体。openMSX (サイクル正確・XML構成・Tcl遠隔操作)、blueMSX (マシンエディタ・BiFiデバッグフック)、および B-System 内蔵の確定性 C99 コア tronMSX。">
+    <meta name="description" content="MSX エミュレータ技術の総合比較と解体。openMSX (サイクル正確・XML構成・Tcl遠隔操作)、blueMSX (マシンエディタ・BiFiデバッグフック)、B-System 内蔵の確定性 C99 コア tronMSX、および Bluespec MSX turbo R の fpgaMSX (bx8)。">
     <link rel="stylesheet" href="../index.css?v=3">
 </head>
 <body>
@@ -30,12 +30,12 @@
     </nav>
 
     <div class="setting-hero">
-        <div class="setting-hero-badge">Virtual Hardware Laboratories · Cycle Accuracy · C99 Cleanroom Embedded Core</div>
+        <div class="setting-hero-badge">Virtual Hardware Laboratories · Cycle Accuracy · C99 Core · Bluespec turbo R</div>
         <h1>摸擬 (Emulators)</h1>
         <div class="subtitle">
-            過去のシリコンを現代に蘇らせる三大多重化エミュレーション環境の技術構造とデバッグ機構。
+            過去のシリコンを現代に蘇らせる四つの実験室。ソフトウェア三系統に、Bluespec の MSX turbo R 機械 fpgaMSX を加える。
             <span class="subtitle-en">
-                "Comparative architectural analysis of primary MSX emulation environments: openMSX (cycle accuracy &amp; XML scripting), blueMSX (slot editor &amp; debug hooks), and tronMSX (B-System's deterministic C99 core)."
+                "Four laboratories: openMSX (cycle accuracy and XML scripting), blueMSX (slot editor and debug hooks), tronMSX (B-System's deterministic C99 core), and fpgaMSX (the Bluespec MSX turbo R, verified under Verilator)."
             </span>
         </div>
     </div>
@@ -51,12 +51,12 @@
         <section class="doc-section">
             <div class="band-head">
                 <span class="band-index">01 / Labs</span>
-                <h2 class="jp-title">1. 三大エミュレータ比較 (Emulation Laboratories)</h2>
-                <p class="band-eyebrow">openMSX · blueMSX · tronMSX</p>
+                <h2 class="jp-title">1. 四つの実験室 (Emulation Laboratories)</h2>
+                <p class="band-eyebrow">openMSX · blueMSX · tronMSX · fpgaMSX</p>
             </div>
             <div class="doc-summary">
-                アーカイブされている三つの主要な仮想化基盤の特性比較です。<br>
-                <span class="summary-en">"Comparison matrix evaluating emulation accuracy, host automation interfaces, debugger features, and embedded runtime integration."</span>
+                三つのソフトウェア基盤と、同じ倉庫の Bluespec 機械。<br>
+                <span class="summary-en">"Three software laboratories, plus fpgaMSX: a Bluespec MSX turbo R exercised by a headless Verilator harness."</span>
             </div>
 
             <div class="market-table-wrap">
@@ -92,6 +92,13 @@
                             <td>BTRON ウィンドウ直結、VirtIO-Sound / SDL2</td>
                             <td><a href="tronMSX/index.html" class="entry" style="font-size:0.8rem; margin:0;">tronMSX 詳解 →</a></td>
                         </tr>
+                        <tr>
+                            <td><b>fpgaMSX</b></td>
+                            <td>Bluespec MSX turbo R（bx8）。単一 57.2727 MHz。Verilator の C99 ハーネス</td>
+                            <td>ヘッドレス PPM、フレーム毎の PC / SP、<code>MSX_VRAM</code> 領域カウント</td>
+                            <td><code>make run_rom</code>、<code>MSX_FRAMES</code>。ビットストリームは未焼成</td>
+                            <td><a href="fpgaMSX/index.html" class="entry" style="font-size:0.8rem; margin:0;">fpgaMSX 詳解 →</a></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -117,6 +124,13 @@
                     <p class="role">B-System Cleanroom C99 Core</p>
                     <p>NASA/JPL Power of Ten に従い、静的メモリのみで動作する BTRON 3.20 組み込みエミュレータ。</p>
                     <a class="entry" href="tronMSX/index.html">C99 API と音響規約 →</a>
+                </div>
+                <div class="card">
+                    <span class="card-num">04</span>
+                    <h4>fpgaMSX</h4>
+                    <p class="role">Bluespec MSX turbo R</p>
+                    <p>tronMSX の隣に置いた BSV 機械。カートリッジ 14 本が初期化番地に届き、SCREEN 2 までの絵が Verilator から出る。基板には焼いていない。</p>
+                    <a class="entry" href="fpgaMSX/index.html">起動記録と物理番地 →</a>
                 </div>
             </div>
         </section>

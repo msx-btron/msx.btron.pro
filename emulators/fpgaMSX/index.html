@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fpgaMSX — Bluespec MSX turbo R (bx8) | msx.btron.pro</title>
+    <meta name="description" content="fpgaMSX（bx8）は B-System の Bluespec SystemVerilog による MSX turbo R である。単一 57.2727 MHz クロック、Verilator 上の C99 ハーネス、スロット 1 からのカートリッジ起動、SCREEN 1/2/5 のスキャンアウト、および assets/msx 全 14 本の起動記録。">
+    <link rel="stylesheet" href="../../index.css?v=3">
+</head>
+<body>
+
+    <nav class="sticky" aria-label="Site navigation">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">MSX <span class="logo-tag">btron.pro</span></a>
+            <ul class="nav-links">
+                <li><a href="../../computers/index.html">Computers</a></li>
+                <li><a href="../../development/index.html">Development</a></li>
+                <li><a href="../../emulators/index.html" class="active">Emulators</a></li>
+                <li><a href="../../games/index.html">Games</a></li>
+                <li><a href="../../systems/index.html">Systems</a></li>
+                <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-MSX</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <nav class="setting-nav">
+        <a href="../../index.html">MSX</a>
+        <span class="sep">/</span>
+        <a href="../../emulators/index.html">Emulators</a>
+        <span class="sep">/</span>
+        <span class="current">fpgaMSX</span>
+    </nav>
+
+    <div class="setting-hero">
+        <div class="setting-hero-badge">bx8 · Bluespec SystemVerilog · Verilator C99 Harness · 57.2727 MHz · Headless Frame Record</div>
+        <h1>fpgaMSX (Emulators)</h1>
+        <div class="subtitle">
+            C99 コア tronMSX と同じ機械を、Bluespec のレジスタ転送で書き直した MSX turbo R。検証は Verilator 上のヘッドレス実行であり、ビットストリームは焼いていない。
+            <span class="subtitle-en">
+                "fpgaMSX, codename bx8, is the Bluespec MSX turbo R beside tronMSX. One master clock, a C99 Verilator harness, and a frame record for every cartridge in the depot. No bitstream has been loaded onto a board."
+            </span>
+        </div>
+    </div>
+
+    <main class="wrap">
+        <a href="../../emulators/index.html" class="entry" style="margin-bottom:1.5rem; display:inline-block;">← 摸擬目録へ戻る (Emulators Index)</a>
+
+        <div class="tagline-card">
+            <strong>シリコンの前に、絵で止める。</strong> — ソースは <code>btron/src/emulators/bx8/</code> にある。マスタクロックは 57.2727 MHz の一つで、<code>tick_28m</code>、<code>tick_7m</code>、<code>tick_3m58</code>、<code>tick_e6</code> は同じクロック上のイネーブルである。Z80A と R800 は一つの <code>CPUCore</code> を分け合い、T9769C のポート <code>$E4</code> / <code>$E5</code> が切り替える。<code>assets/msx/</code> の ROM 14 本はすべてカートリッジの初期化番地に到達した。絵になるのはその一部である。
+            <span class="tagline-en">
+                "The machine lives at btron/src/emulators/bx8/. Z80A and R800 share one CPUCore, switched by the T9769C. All fourteen cartridges reach their init vector. The plates below are the frames that actually drew."
+            </span>
+        </div>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">01 / Placement</span>
+                <h2 class="jp-title">1. 配置 (Where bx8 Sits)</h2>
+                <p class="band-eyebrow">src/emulators/bx8 · Sibling of tronMSX · Proofs in build/bx8</p>
+            </div>
+            <div class="doc-summary">
+                ソフトウェアの MSX と、同じ倉庫の FPGA 機械。<br>
+                <span class="summary-en">"The C99 reference and the Bluespec machine are siblings. Boot frames stay in the depot build tree; this page keeps display copies."</span>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>場所</th>
+                            <th>中身</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>src/emulators/msx/</code></td>
+                            <td>tronMSX。確定性 C99。bx8 の参照実装。</td>
+                        </tr>
+                        <tr>
+                            <td><code>src/emulators/bx8/bsv/</code></td>
+                            <td>Bluespec の SoC。CPU、スロット、V9958、PSG、SCC、PCM、PPI。</td>
+                        </tr>
+                        <tr>
+                            <td><code>src/emulators/bx8/sim/verilator/</code></td>
+                            <td>C99 ハーネス <code>sim_rom.c</code> と <code>fpga_rom_runner</code>。</td>
+                        </tr>
+                        <tr>
+                            <td><code>src/emulators/bx8/syn/</code></td>
+                            <td>ULX3S / Tang Primer 20K のラッパと Yosys スクリプト。未焼成。</td>
+                        </tr>
+                        <tr>
+                            <td><code>build/bx8/</code></td>
+                            <td>起動証明。PPM、ログ、<code>summary.txt</code>、PNG。<code>ALL_DONE</code>、14 本とも exit 0。</td>
+                        </tr>
+                        <tr>
+                            <td><code>doc/md/FPGA.md</code></td>
+                            <td>設計メモ。パスは <code>src/emulators/bx8/</code> を指す。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">02 / Silicon</span>
+                <h2 class="jp-title">2. 実装されている単位 (Silicon That Is In The Tree)</h2>
+                <p class="band-eyebrow">CPUCore · T9769C · SlotManager · V9958 · PSG · SCC · PCM</p>
+            </div>
+            <div class="doc-summary">
+                ツリーにファイルがあるものだけを載せる。OPLL と Geo3D の BSV は無い。<br>
+                <span class="summary-en">"Modules listed here have sources. OPLL.bsv and Geo3D.bsv do not exist. ASCII16 bank switching is still a host intercept in the harness."</span>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 34%;">BSV</th>
+                            <th style="width: 28%;">対応する C99</th>
+                            <th>いま動いていること</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>cpu/CPUCore.bsv</code></td>
+                            <td><code>z80.c</code> / <code>r800.c</code></td>
+                            <td>一つのレジスタファイル。リセット後は Z80。ポート <code>$E4</code> のビット 5 が 0 で R800。C-BIOS の <code>wait_b</code> を抜けてカートリッジに入る。</td>
+                        </tr>
+                        <tr>
+                            <td><code>cpu/T9769C.bsv</code></td>
+                            <td><code>t9769c.c</code></td>
+                            <td>S1990。レジスタ 6 のビット 6 が DRAM シャドウ。リセット値 <code>cpu_status = 0x60</code>。</td>
+                        </tr>
+                        <tr>
+                            <td><code>memory/SlotManager.bsv</code></td>
+                            <td><code>slots.c</code></td>
+                            <td>スロット 1 は全ページがカートリッジ窓。空のページ 0 は <code>0xFF</code> のままで、CHKRAM は通る。<code>$FFFF</code> の読出は反転。</td>
+                        </tr>
+                        <tr>
+                            <td><code>memory/Mapper.bsv</code></td>
+                            <td><code>slots.c</code></td>
+                            <td>512 KB のマッパ RAM。物理 <code>0x010000</code>、マスク <code>0x1F</code>。</td>
+                        </tr>
+                        <tr>
+                            <td><code>vdp/V9958.bsv</code></td>
+                            <td><code>v9938.c</code></td>
+                            <td>SCREEN 5、SCREEN 2（G2）、SCREEN 1（G1）を VRAM からスキャンする。スプライトと SCREEN 0 は未描画。</td>
+                        </tr>
+                        <tr>
+                            <td><code>audio/PSG.bsv</code> <code>SCC.bsv</code> <code>PCM.bsv</code></td>
+                            <td><code>psg.c</code> <code>scc.c</code> <code>pcm.c</code></td>
+                            <td>音源の器はある。この頁の記録は絵であり、音の照合はまだ無い。</td>
+                        </tr>
+                        <tr>
+                            <td><code>io/PPI.bsv</code> <code>Keyboard.bsv</code></td>
+                            <td><code>ppi.c</code> <code>kbd.c</code></td>
+                            <td>PPI <code>$A8</code> はリセットでスロット 0。キーボード行列はハーネスから押せる。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">03 / Map</span>
+                <h2 class="jp-title">3. クロックと物理番地 (Clock And Physical Map)</h2>
+                <p class="band-eyebrow">57.2727 MHz · 24-bit Flat Address · C-BIOS turbo R</p>
+            </div>
+            <div class="doc-summary">
+                メモリモデルの初期値は <code>0xFF</code>。カートリッジ A は <code>0x100000</code>。<br>
+                <span class="summary-en">"BIOS, sub-ROM, mapper RAM, two cartridge windows, and VRAM share one 24-bit space. The harness loads C-BIOS turbo R before the cartridge."</span>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>物理番地</th>
+                            <th>窓</th>
+                            <th>備考</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>0x000000</code></td>
+                            <td>メイン BIOS 32 KB</td>
+                            <td><code>cbios_main_msxtr.rom</code>。リセットは <code>F3 C3 D2 23</code>（<code>DI; JP $23D2</code>）。</td>
+                        </tr>
+                        <tr>
+                            <td><code>0x008000</code></td>
+                            <td>サブ ROM 16 KB</td>
+                            <td>スロット 3-1、ページ 0。</td>
+                        </tr>
+                        <tr>
+                            <td><code>0x010000</code></td>
+                            <td>マッパ RAM 512 KB</td>
+                            <td>スロット 3-0。</td>
+                        </tr>
+                        <tr>
+                            <td><code>0x100000</code></td>
+                            <td>カートリッジ A</td>
+                            <td>CPU <code>$0000</code> が物理 <code>0x100000</code>、<code>$4000</code> が <code>0x104000</code>。16 KB はページ 1 と 2 に鏡写し。48 KB で <code>$4000</code> に <code>AB</code> がある像はページ 0 から載る。</td>
+                        </tr>
+                        <tr>
+                            <td><code>0x200000</code></td>
+                            <td>カートリッジ B</td>
+                            <td>第二窓。今回の 14 本は A 側。</td>
+                        </tr>
+                        <tr>
+                            <td><code>0x300000</code></td>
+                            <td>VRAM</td>
+                            <td>SCREEN 2 のネームは <code>$1800</code>、色は <code>$2000</code>、パターンは <code>$0000</code>。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">04 / Frames</span>
+                <h2 class="jp-title">4. 起動の絵 (Frames That Drew)</h2>
+                <p class="band-eyebrow">MSX_LOGO · YAZZIER · Dynamite Go! Go! · Night Raven</p>
+            </div>
+            <div class="doc-summary">
+                五枚は Verilator が書いた PPM からの PNG である。縦縞はビームが 168 歩で 256 画素を埋めるための補間で、絵の識別はできる。<br>
+                <span class="summary-en">"Five frames from the archived PPM files. Vertical stripes are the 168-step beam fill. The picture is still the title the cartridge wrote."</span>
+            </div>
+
+            <div class="plate-row">
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/logo.png" alt="MSX logo: yellow and navy cubes inside a ring, on a pale field, with a black band along the bottom">
+                        </div>
+                        <figcaption>
+                            <span><b>MSX_LOGO</b> — Screen 5</span>
+                            <span>PC 0x4075 · SP 0xF2E8 · Z80</span>
+                        </figcaption>
+                    </figure>
+                    <p>起動成功の基準。ランナーは <code>CARTRIDGE BOOT SUCCESS</code> を出し、初期化番地 <code>0x4010</code> の近くで止まる。五色のロゴ。</p>
+                </div>
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/yazzier.png" alt="YAZZIER 3.0 cracktro text in magenta on a cyan screen-2 field">
+                        </div>
+                        <figcaption>
+                            <span><b>YAZZIER 3.0</b> — Screen 2</span>
+                            <span>PC 0x0391 · SP 0x2EFE · R800</span>
+                        </figcaption>
+                    </figure>
+                    <p>「The cracker: Egor」「keyboard type: JP」「No ROM in slot」が読める。末尾の SP はページ 0 に落ちており、割り込み後のスタックは未解決。</p>
+                </div>
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/dynamite.png" alt="Dynamite Go title card reading PROJECT EGG PRESENTS on a yellow and pink field">
+                        </div>
+                        <figcaption>
+                            <span><b>Dynamite Go! Go!</b> — 120 frames</span>
+                            <span>PC 0x467B · SP 0xC5F3 · Z80</span>
+                        </figcaption>
+                    </figure>
+                    <p>20 フレームでは黒のままである。120 フレームで「PROJECT EGG PRESENTS」が出る。下 20 行は 192 ラインの外で黒。</p>
+                </div>
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/flight.png" alt="Night Raven MSX3 GEO3D menu with launch instructions and a status bar">
+                        </div>
+                        <figcaption>
+                            <span><b>Night Raven Flight</b></span>
+                            <span>PC 0xCC2F · SP 0xF2FA · R800</span>
+                        </figcaption>
+                    </figure>
+                    <p>メニューが読める。「ARROWS OR JOYSTICK」「SPACE TO LAUNCH」。14 色。これは VDP のスキャンアウトであり、Geo3D 演算器ではない。</p>
+                </div>
+                <div class="cell">
+                    <figure class="plate">
+                        <div class="field">
+                            <img src="frames/geo3d.png" alt="Black starfield, a red dithered nebula, and a blue-green planet on the right">
+                        </div>
+                        <figcaption>
+                            <span><b>Night Raven Geo3D</b></span>
+                            <span>PC 0xEC60 · SP 0xF2FE · R800</span>
+                        </figcaption>
+                    </figure>
+                    <p>星と星雲と、右の惑星。CPU が VRAM に書いた絵を V9958 が走査している。幾何アクセラレータの BSV は無い。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">05 / Record</span>
+                <h2 class="jp-title">5. 十四本の起動記録 (Every Cartridge)</h2>
+                <p class="band-eyebrow">assets/msx/*.rom · Exit 0 · CARTRIDGE BOOT SUCCESS</p>
+            </div>
+            <div class="doc-summary">
+                20 フレーム、サイクル上限 2 億。長い四本は 120 フレーム、上限 4 億。<code>build/bx8/frames-20/summary.txt</code> が台帳。<br>
+                <span class="summary-en">"Every ROM reached its cartridge init vector. A reached vector is not a finished picture. Disk images were not booted."</span>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>ROM</th>
+                            <th>載せ方</th>
+                            <th>最後の PC / SP</th>
+                            <th>絵</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>MSX_LOGO.rom</b></td>
+                            <td>16 KB、<code>AB</code>、<code>0x4010</code></td>
+                            <td><code>0x4075</code> / <code>0xF2E8</code> Z80</td>
+                            <td><a href="frames/logo.png">五色のロゴ</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>MSX_LOGO-v2.rom</b></td>
+                            <td>16 KB、同じ系統</td>
+                            <td><code>0x4075</code> / <code>0xF2E8</code> Z80</td>
+                            <td><a href="frames/logo-v2.png">ロゴ</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>MSX_LOGO-clean-final.rom</b></td>
+                            <td>16 KB、CHGMOD 5</td>
+                            <td><code>0x4075</code> / <code>0xF2E8</code> Z80</td>
+                            <td><a href="frames/logo-clean.png">ロゴ、15 色</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>YAZZIER.ROM</b></td>
+                            <td>32 KB、ページ 1 から、CHGMOD 2</td>
+                            <td><code>0x0391</code> / <code>0x2EFE</code> R800</td>
+                            <td><a href="frames/yazzier.png">SCREEN 2 の文字</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>Dynamite Go! Go!</b></td>
+                            <td>32 KB、CHGMOD 2</td>
+                            <td><code>0x467B</code> / <code>0xC5F3</code> Z80</td>
+                            <td><a href="frames/dynamite.png">120 フレームで題字</a>。20 フレームでは黒。</td>
+                        </tr>
+                        <tr>
+                            <td><b>c0man.rom</b></td>
+                            <td>16 KB、BIOS の SCREEN 1 のまま</td>
+                            <td><code>0x0345</code> / <code>0xF350</code> Z80</td>
+                            <td><a href="frames/c0man.png">青一色</a>。ネームは 0。スプライトは VRAM にあるが描かない。120 フレームでも BIOS の OTIR から出ない。</td>
+                        </tr>
+                        <tr>
+                            <td><b>xracing_v1.0.4.rom</b></td>
+                            <td>48 KB、ページ 0 から。<code>$4000</code> の <code>AB</code>、初期化 <code>0x4010</code></td>
+                            <td><code>0x19B6</code> / <code>0xEA90</code> Z80</td>
+                            <td><a href="frames/xracing.png">黒</a>。LDIR までは SP <code>0xF37C</code>。その後スタックが壊れる。</td>
+                        </tr>
+                        <tr>
+                            <td><b>Bad Apple (ASCII16)</b></td>
+                            <td>2 MB、ホスト側 ASCII16。初期化 <code>0x4810</code></td>
+                            <td><code>0x0039</code>、SP が流れ続ける Z80</td>
+                            <td><a href="frames/badapple.png">黒</a>。<code>$0038</code> のベクタ JP を繰り返し引退する。</td>
+                        </tr>
+                        <tr>
+                            <td><b>BULLRUSH.ROM</b></td>
+                            <td>1 MB、ASCII16、R800</td>
+                            <td><code>0xEC00</code> / <code>0xF2FC</code></td>
+                            <td><a href="frames/bullrush.png">緑一色</a>。ネームテーブルは「C-BIOS」。SCREEN 0 をまだ走査しない。</td>
+                        </tr>
+                        <tr>
+                            <td><b>AUREL_VAULT.rom</b></td>
+                            <td>1 MB、ASCII16、R800</td>
+                            <td><code>0x8D94</code> / <code>0xF2FA</code></td>
+                            <td><a href="frames/aurel.png">緑一色</a>。VRAM は埋まっている。モードは 1 / 2 / 5 ではない。</td>
+                        </tr>
+                        <tr>
+                            <td><b>btron8.rom</b></td>
+                            <td>MegaROM、R800</td>
+                            <td><code>0xFF94</code> / <code>0xEFBB</code></td>
+                            <td><a href="frames/btron8.png">黒</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>NIGHT_RAVEN_FLIGHT_DEMO</b></td>
+                            <td>MegaROM、R800</td>
+                            <td><code>0xCC2F</code> / <code>0xF2FA</code></td>
+                            <td><a href="frames/flight.png">メニュー</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>NIGHT_RAVEN_GEO3D</b></td>
+                            <td>MegaROM、R800</td>
+                            <td><code>0xEC60</code> / <code>0xF2FE</code></td>
+                            <td><a href="frames/geo3d.png">惑星</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>NEON_REVENANT</b></td>
+                            <td>4 MB、ASCII16、R800</td>
+                            <td><code>0x026B</code> / <code>0xF2CD</code></td>
+                            <td><a href="frames/neon.png">暗い面</a>。20 フレーム、SP は RAM の中。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="doc-summary" style="margin-top:1.4rem;">
+                <code>assets/msx/</code> のディスク七枚（512 Bytes MSX1 Demo、An Uncle in Brazil、Audio Wave 3、Bad Apple Pyhesty、IOD GIF Demo、Puzzle Egg、Xmas Demo）は実行していない。FDC もディスク ROM も無い。ブートセクタを偽らない。<br>
+                <span class="summary-en">"Seven disk images stay on disk. There is no WD2793 and no disk ROM in bx8."</span>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">06 / Limits</span>
+                <h2 class="jp-title">6. まだ機械に無いもの (Not In This Machine)</h2>
+                <p class="band-eyebrow">Screen 0 · Sprites · IRQ Stack · No Bitstream</p>
+            </div>
+            <div class="doc-summary">
+                絵が平らな理由は、起動失敗とは別である。<br>
+                <span class="summary-en">"A flat frame can mean a missing scan mode. A smashed stack is a different bug. Neither has been patched by guessing."</span>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>状態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SCREEN 0</td>
+                            <td>モード <code>5'b00001</code> は R#7 の背景色で塗る。BULLRUSH の「C-BIOS」文字は VRAM にあり、画面には出ない。</td>
+                        </tr>
+                        <tr>
+                            <td>スプライト</td>
+                            <td>モード 1 のスプライト走査は無い。c0man の青は、空のネームテーブルと未描画のスプライトの結果。</td>
+                        </tr>
+                        <tr>
+                            <td>割り込みと SP</td>
+                            <td>Bad Apple は <code>PC=0x0039</code> に張り付く。xracing は正常な LDIR のあと SP が RAM を離れる。原因は未確定。</td>
+                        </tr>
+                        <tr>
+                            <td>ASCII16 バンク</td>
+                            <td>バンク切替はハーネスのホスト側。BSV のスロットマネージャはまだバンクを持たない。</td>
+                        </tr>
+                        <tr>
+                            <td>OPLL / Geo3D / FDC</td>
+                            <td><code>OPLL.bsv</code> も <code>Geo3D.bsv</code> もフロッピー制御も無い。</td>
+                        </tr>
+                        <tr>
+                            <td>基板</td>
+                            <td>ULX3S 用 Yosys スクリプトはある。ビットストリームは生成していない。焼いていない。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">07 / Reproduce</span>
+                <h2 class="jp-title">7. 同じ絵を出す (Reproduce A Frame)</h2>
+                <p class="band-eyebrow">make run_rom · MSX_FRAMES · MSX_VRAM</p>
+            </div>
+            <div class="doc-summary">
+                デポのルートで。既定の ROM は <code>assets/msx/MSX_LOGO.rom</code>。<br>
+                <span class="summary-en">"The Makefile resolves the depot root from src/emulators/bx8/sim/verilator, five levels up. BIOS lookup walks the same distance."</span>
+            </div>
+            <div class="market-table-wrap">
+                <table class="market-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <code>make -C src/emulators/bx8/sim/verilator run_rom \<br>
+                                ROM="$(pwd)/assets/msx/MSX_LOGO.rom" \<br>
+                                PPM="$(pwd)/build/bx8/MSX_LOGO.ppm"</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>カートリッジ入場のあと何枚残すかは <code>MSX_FRAMES</code>（既定 20）。<code>MSX_VRAM=1</code> はネーム、色、パターン、スプライト属性の非ゼロ数を出す。入場しなければ exit 2。PPM は失敗時も書く。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <div class="band-head">
+                <span class="band-index">08 / Links</span>
+                <h2 class="jp-title">8. 隣の実験室 (Adjacent Laboratories)</h2>
+                <p class="band-eyebrow">tronMSX · C-BIOS · Emulators Index</p>
+            </div>
+            <div class="related-grid">
+                <a href="../tronMSX/index.html" class="related-card">
+                    <h4>tronMSX <span>→</span></h4>
+                    <p>同じ機械の C99。bx8 の命令、スロット、VDP の参照実装。</p>
+                </a>
+                <a href="../../systems/c-bios/index.html" class="related-card">
+                    <h4>C-BIOS <span>→</span></h4>
+                    <p>この起動が載せる turbo R メイン ROM とサブ ROM。</p>
+                </a>
+                <a href="../openMSX/index.html" class="related-card">
+                    <h4>openMSX <span>→</span></h4>
+                    <p>サイクル正確な参照エミュレータ。Tcl と XML 機体定義。</p>
+                </a>
+                <a href="../blueMSX/index.html" class="related-card">
+                    <h4>blueMSX <span>→</span></h4>
+                    <p>スロットエディタと BiFi デバッグフック。</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="wrap">
+            <div class="footer-columns">
+                <div>
+                    <h4>Computers</h4>
+                    <ul>
+                        <li><a href="../../computers/Sony HB-F900/index.html">Sony HB-F900</a></li>
+                        <li><a href="../../computers/Sony HB-G900AP/index.html">Sony HB-G900AP</a></li>
+                        <li><a href="../../computers/Victor HC-95 AB/index.html">Victor HC-95 AB</a></li>
+                        <li><a href="../../computers/Yamaha YIS-805 256/index.html">Yamaha YIS-805 256</a></li>
+                        <li><a href="../../computers/Panasonic FS-A1FM/index.html">Panasonic FS-A1FM</a></li>
+                        <li><a href="../../computers/Hitachi MB-H70/index.html">Hitachi MB-H70</a></li>
+                        <li><a href="../../computers/index.html">全13機種一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Systems</h4>
+                    <ul>
+                        <li><a href="../../systems/btron/index.html">8-bit BTRON</a></li>
+                        <li><a href="../../systems/msx-bios/index.html">MSX-BIOS</a></li>
+                        <li><a href="../../systems/msx-dos/index.html">MSX-DOS 2</a></li>
+                        <li><a href="../../systems/c-bios/index.html">C-BIOS</a></li>
+                        <li><a href="../../systems/uzix/index.html">UZIX (Unix V7)</a></li>
+                        <li><a href="../../systems/index.html">基本ソフト一覧 &rarr;</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Development</h4>
+                    <ul>
+                        <li><a href="../../development/sdcc/index.html">SDCC Compiler</a></li>
+                        <li><a href="../../development/pasmo/index.html">Pasmo Assembler</a></li>
+                        <li><a href="../../development/index.html">Toolchain Overview</a></li>
+                        <li><a href="https://btron.pro/btron/doc/txt/MSX-SOUND.txt" target="_blank">MSX Sound Spec</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Emulators</h4>
+                    <ul>
+                        <li><a href="../../emulators/openMSX/index.html">openMSX</a></li>
+                        <li><a href="../../emulators/blueMSX/index.html">blueMSX</a></li>
+                        <li><a href="../../emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="index.html" class="active">fpgaMSX (bx8)</a></li>
+                        <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; margin-top: 4.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.84rem; color: var(--ink-3); display: flex; flex-direction: column; align-items: center; gap: 1.6rem;">
+                <a href="../../sakazaki.svg" title="Sakazaki Clan Kamon — 二蓋笠 (Nigai-gasa)" style="display: inline-block; text-decoration: none; margin-bottom: 0.2rem;">
+                    <img src="../../sakazaki.svg" alt="Sakazaki Order Logo" style="width: 108px; height: auto; display: block; opacity: 0.88; transition: opacity 0.25s ease, transform 0.25s ease;">
+                </a>
+                <div class="footer-legal">
+                    <p style="margin: 0 0 0.85rem; font-weight: 500; letter-spacing: 0.04em; color: #b8c0c8; font-size: 0.81rem;">
+                        &copy; 2026 Cryptographics Telesystems, LLC. Ukraine. All rights reserved.
+                    </p>
+                    <p style="margin: 0 0 0.9rem; line-height: 1.75;">
+                        <b>TRADEMARK &amp; COMPLIANCE DISCLOSURE:</b> MSX&trade; is a registered trademark of MSX Licensing Corporation and ASCII Corporation. TRON, BTRON, and μITRON are trademarks of TRON Forum and Professor Ken Sakamura. SONY&reg;, HitBit&trade;, and G-ZERO&trade; are trademarks or registered trademarks of Sony Group Corporation / Sony Corporation. Hitachi&reg; is a registered trademark of Hitachi, Ltd. Panasonic&reg; (Panasonic Holdings Corporation), Victor / JVC&reg; (JVCKENWOOD Corporation), and Yamaha&reg; (Yamaha Corporation) are trademarks of their respective proprietors. All manufacturer designations, hardware component identifiers, and registered software titles cited within this repository are the property of their respective trademark holders and are reproduced strictly under statutory fair use doctrine for non-commercial historical preservation, register-level hardware documentation, and cleanroom interoperability engineering.
+                    </p>
+                    <p style="margin: 0; line-height: 1.75; color: #69747e; font-size: 0.74rem;">
+                        msx.btron.pro &nbsp;·&nbsp; MSX Archival &amp; Technical Portal &nbsp;·&nbsp; Under ISC / MIT Licence &nbsp;·&nbsp; Conforming to DOCOPS &amp; PUBLISH Standards
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

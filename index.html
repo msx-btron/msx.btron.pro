@@ -524,21 +524,23 @@
                 <div class="band-head">
                     <span class="band-index">05 / Emulators</span>
                     <h2 class="jp-title">第五部：エミュレーション基盤とデバッガ</h2>
-                    <p class="band-eyebrow">openMSX · blueMSX · tronMSX · Cycle-Accurate Validation</p>
+                    <p class="band-eyebrow">openMSX · blueMSX · tronMSX · fpgaMSX · Cycle-Accurate Validation</p>
                 </div>
 
                 <div class="band-intro">
                     <p>
                         MSX エミュレータは、過去の遺産を再現するだけでなく、現代のソフトウェア開発における不可欠の検証基盤です。オープンソース界で最も厳密なサイクル精度と Tcl 遠隔制御を誇る
-                        openMSX、洗練された GUI とマシンエディタを備えた blueMSX、そして B-System 内部に C99 純実装として組み込まれた確定性コア
-                        tronMSX。三つの基盤が開発者の足元を支えます。
+                        openMSX、洗練された GUI とマシンエディタを備えた blueMSX、B-System 内部に C99 純実装として組み込まれた確定性コア
+                        tronMSX、そして同じ倉庫の Bluespec 機械
+                        fpgaMSX。四つの実験室が開発者の足元を支えます。
                     </p>
                     <p class="en">
                         Emulation serves as the bedrock for modern MSX verification. openMSX establishes the reference
                         standard with cycle-accurate VDP renderers, time-travel reverse debugging, and Tcl pipe
                         automation. blueMSX offers dynamic slot-configuration editing and BiFi trace hooks. tronMSX
                         embeds an uncompromising cleanroom C99 MSX2+ core inside B-System according to NASA/JPL Power of
-                        Ten reliability rules.
+                        Ten reliability rules. fpgaMSX is the Bluespec MSX turbo R beside that core, exercised headless
+                        under Verilator.
                     </p>
                 </div>
 
@@ -564,6 +566,13 @@
                         <p class="role">B-System Embedded Core</p>
                         <p>BTRON ウィンドウマネージャへ直接描画するクリーンルーム C99 コア。動的メモリ確保ゼロ、有界ループ、44.1 kHz PCM 直流阻止音響合成。</p>
                         <a class="entry" href="emulators/tronMSX/index.html">C99 コア仕様と API →</a>
+                    </div>
+                    <div class="card">
+                        <span class="card-num">04</span>
+                        <h4>fpgaMSX</h4>
+                        <p class="role">Bluespec MSX turbo R</p>
+                        <p>単一 57.2727 MHz の BSV 機械。Verilator 上でカートリッジが初期化番地に届き、ロゴと SCREEN 2 の題字が PPM として残る。ビットストリームは未焼成。</p>
+                        <a class="entry" href="emulators/fpgaMSX/index.html">起動記録と物理番地 →</a>
                     </div>
                 </div>
             </div>
@@ -615,6 +624,7 @@
                         <li><a href="emulators/openMSX/index.html">openMSX</a></li>
                         <li><a href="emulators/blueMSX/index.html">blueMSX</a></li>
                         <li><a href="emulators/tronMSX/index.html">tronMSX (B-MSX)</a></li>
+                        <li><a href="emulators/fpgaMSX/index.html">fpgaMSX (bx8)</a></li>
                         <li><a href="https://btron.pro/b-system/apps/MSX.html" target="_blank">B-System MSX App</a></li>
                         <li><a href="https://btron.pro/b-media/msx.html" target="_blank">B-MSX Book Spec</a></li>
                     </ul>
